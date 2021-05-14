@@ -1,5 +1,5 @@
 {
-  "mongoProdURI": "",
+  "mongoProdURI": "mongodb+srv://admin-calum:QPE9xzsiYfExnWy4@drops.aqp0q.mongodb.net/NguyenDiary?retryWrites=true&w=majority",
   "mongoLocalURI": "mongodb://localhost:27017/nguyenDiary",
   "jwtSecret": "nguyendiary&^%%**^&*",
   "cloud_name": "hw93eukdo",
