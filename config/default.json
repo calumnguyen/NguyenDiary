@@ -1,0 +1,10 @@
+{
+  "mongoProdURI": "",
+  "mongoLocalURI": "mongodb://localhost:27017/nguyenDiary",
+  "jwtSecret": "nguyendiary&^%%**^&*",
+  "cloud_name": "hw93eukdo",
+  "api_key": "472874284989916",
+  "api_secret": "cqVqy74KraATeqPDWb0hxOODxbE",
+  "sendgrid_api":"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",
+  "email_sender":"supervisor@sutygon.com"
+}
