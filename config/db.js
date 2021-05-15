@@ -6,7 +6,7 @@ const LocalDbUrl = config.get('mongoLocalURI');
 const connectDB = async () => {
   try {
     await mongoose.connect(
-      (process.env==="production")?ProdDbUrl:LocalDbUrl, {
+      (process.env.NODE_ENV === 'production')?ProdDbUrl:LocalDbUrl, {
       // added to avoid bugs
       useNewUrlParser: true,
       useCreateIndex: true,

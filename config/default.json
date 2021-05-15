@@ -7,5 +7,6 @@
   "api_secret": "cqVqy74KraATeqPDWb0hxOODxbE",
   "sendgrid_api":"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",
   "email_sender":"supervisor@sutygon.com",
-  "magic_api_key": "somerandomkey"
+  "publishable_magic_api_key": "pk_test_DCB03691FD035542",
+  "secret_magic_api_key": "sk_test_8883696544D5D0B7"
 }
