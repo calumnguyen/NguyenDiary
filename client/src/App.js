@@ -5,7 +5,7 @@ import {
   Switch,
   withRouter,
 } from "react-router-dom";
-import './App.css';
+import './global.css';
 import setAuthToken from "./utils/setAuthToken";
 import PrivateRoute from "./routing/PrivateRoute";
 
