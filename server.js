@@ -6,7 +6,7 @@ const connectDB = require('./config/db');
 const { Magic } = require('@magic-sdk/admin');
 // Load env vars
 dotenv.config({ path: './config/config.env' });
-const magicAdmin = new Magic(process.env.magic_api_key);
+const magicAdminApiPublish = new Magic(process.env.magic_api_key_publish);
 connectDB();
 
 // Middlewares

@@ -4,16 +4,16 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema(
   {
     information : {
-      username: {
+      userName: {
         type: String,
         unique: true,
         required: true,
       },
-      fullname: {
+      fullName: {
         type: String,
         required: true,
       },
-      contactnumber: {
+      contactNumber: {
         type: String,
         required: true,
       },
@@ -35,7 +35,7 @@ const UserSchema = new Schema(
         default: 'active',
         enum: ['active', 'inactive'],
       },
-      inactivated_date: {
+      inactivatedDate: {
         type: Date,
       },
       avatar: {
