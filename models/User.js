@@ -13,6 +13,9 @@ const UserSchema = new Schema(
         type: String,
         required: true,
       },
+      issuer: {
+        type: String
+      },
       contactNumber: {
         type: String,
         required: true,

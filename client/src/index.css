@@ -38,6 +38,7 @@
   --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; 
   --theme-orange: #EB5E0B;
   --theme-black: #0D0C0C;
+  --theme-white: #A3D2CA;
 }
 
 body {

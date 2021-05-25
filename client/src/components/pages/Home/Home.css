@@ -27,7 +27,7 @@
     line-height: 30px;
     letter-spacing: 0em;
     text-align: center;
-    color: #A3D2CA;
+    color: var(--theme-white);
 }
 .profiles{
   margin-top: 75px;
@@ -61,4 +61,17 @@
   align-items: center;
   text-align: center;
   color: var(--theme-orange);
+}
+
+@media only screen and (max-width: 767px){
+  .home {
+    height: auto;
+  }
+  .home .intro h3 {
+    font-size: 32px;
+    margin-top: 10%;
+  }
+  .profileName h3{
+    margin-bottom: 15%;
+  }
 }

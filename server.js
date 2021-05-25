@@ -2,18 +2,23 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
-const { Magic } = require('@magic-sdk/admin');
+
 // Load env vars
 dotenv.config({ path: './config/config.env' });
-const magicAdminApiPublish = new Magic(process.env.magic_api_key_publish);
+
+//connect to DB
 connectDB();
+
 
 // Middlewares
 app.use(express.json({ extended: false }));
 app.use(express.static(path.join(__dirname, '/public')));
+app.use(cookieParser(`${process.env.jwtSecret}`));
 
 // Routes
+app.use('/api/users',require('./routes/api/users'));
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static('client/build'));
