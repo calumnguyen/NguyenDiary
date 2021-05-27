@@ -24,12 +24,12 @@ export class Home extends PureComponent {
       allUsers : []
     };
   }
-
+  // process.env.NODE_ENV === "production"
+  // ? process.env.magic_api_key_publish
+  // : process.env.REACT_APP_magic_api_key_publish
   handleSignInRequest = async (values) => {
     const DID = await new Magic(
-      process.env.NODE_ENV === "production"
-        ? process.env.magic_api_key_publish
-        : process.env.REACT_APP_magic_api_key_publish
+      'pk_test_DCB03691FD035542'
     ).auth.loginWithMagicLink({ email: values.email });
 
     const authRequest = await fetch("/api/users/login", {
