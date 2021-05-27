@@ -60,7 +60,7 @@ export const getAllUsers = () => async (dispatch) => {
     if(res.data) {
       dispatch({
         type: GET_USERS,
-        payload: res.data,
+        payload: res.data.allUsers,
       });
     }
   } catch (err) {
@@ -136,12 +136,12 @@ export const updateUser = (user, id) => async (dispatch) => {
     });
   }
 };
-const didToken = await magic.auth.loginWithMagicLink({ email });
-await fetch(`${serverUrl}user/login`, {
-  headers: new Headers({
-    Authorization: "Bearer " + didToken
-  }),
-  wthCredentials: true,
-  credentials: "same-origin",
-  method: "POST"
-});
+// const didToken = await magic.auth.loginWithMagicLink({ email });
+// await fetch(`${serverUrl}user/login`, {
+//   headers: new Headers({
+//     Authorization: "Bearer " + didToken
+//   }),
+//   wthCredentials: true,
+//   credentials: "same-origin",
+//   method: "POST"
+// });

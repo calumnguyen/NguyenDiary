@@ -72,7 +72,7 @@ router.post("/login", async (req, res) => {
       signed: true, // Indicates if the cookie should be signed
     };
 
-    res.cookie("x-auth-token", token, options);
+    res.cookie("token", token, options);
     res.cookie("authed", true, { httpOnly: false });
     
     res.status(200).end();

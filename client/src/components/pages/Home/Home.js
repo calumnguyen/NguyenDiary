@@ -2,9 +2,29 @@ import React, { PureComponent } from "react";
 import "./Home.css";
 import ProfileCard from "./ProfileCard";
 import { Magic } from "magic-sdk";
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+// import { confirmAlert } from 'react-confirm-alert';
+// import 'react-confirm-alert/src/react-confirm-alert.css';
+// import DatePicker from 'react-datepicker';
+// import 'react-datepicker/dist/react-datepicker.css';
+// import { OCAlertsProvider } from '@opuscapita/react-alerts';
+// import { OCAlert } from '@opuscapita/react-alerts';
+
+// Actions
+import {getAllUsers} from '../../../actions/user';
+
 
 export class Home extends PureComponent {
-  
+  constructor(props) {
+    super(props);
+    this.state = {
+      allUsers : []
+    };
+  }
+
   handleSignInRequest = async (values) => {
     const DID = await new Magic(
       process.env.NODE_ENV === "production"
@@ -26,6 +46,25 @@ export class Home extends PureComponent {
     }
   };
 
+  async componentDidMount() {
+    await this.props.getAllUsers();
+    this.setState({allUsers: this.props.allUsers});
+  }
+
+  allProfiles = () => {
+    let profiles = []
+    if(this.state.allUsers && this.state.allUsers.length>0){
+      profiles = this.state.allUsers.map((profile)=> {
+        return (
+          <div className="col-sm-3">
+            <ProfileCard profile={profile} handleSignInRequest={this.handleSignInRequest}/>
+          </div>
+        );
+      })
+    }
+    return profiles;
+  }
+
   render() {
     return (
       <>
@@ -41,25 +80,7 @@ export class Home extends PureComponent {
               </div>
 
               <div className="row profiles">
-                <div className="col-sm-3">
-                  <ProfileCard />
-                </div>
-                <div className="col-sm-3">
-                  <ProfileCard />
-                </div>
-                <div className="col-sm-3">
-                  <ProfileCard />
-                </div>
-                <div className="col-sm-3">
-                  <ProfileCard />
-                </div>
-                <button
-                  onClick={() =>
-                    this.handleSignInRequest({ email: "tdivyanshu99@gmail.com" })
-                  }
-                >
-                  Click me to test magic link, it will redirect to /dashboard
-                </button>
+                {this.allProfiles()}
               </div>
             </div>
           </div>
@@ -69,4 +90,15 @@ export class Home extends PureComponent {
   }
 }
 
-export default Home;
+Home.propTypes = {
+  getAllUsers: PropTypes.func,
+  loadUser: PropTypes.func,
+};
+
+const mapStateToProps = (state) => ({
+  allUsers: state.user.users,
+});
+
+export default connect(mapStateToProps, { getAllUsers })(
+  Home
+);
