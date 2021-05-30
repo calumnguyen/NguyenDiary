@@ -1,10 +1,23 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import "./Home/Home.css";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+
+import {
+  logout
+} from "../../actions/auth";
+import { times } from "lodash";
+
 export class Dashboard extends Component {
   static propTypes = {};
-  handleLogOutRequest = () => {
-    console.log("You are logged out");
+  constructor(props){
+    super(props);
+  }
+  handleLogOutRequest = async () => {
+    await this.props.logout();
+    if(!this.props.token){
+      this.props.history.push('/');
+    }
   };
   render() {
     return (
@@ -31,4 +44,13 @@ export class Dashboard extends Component {
   }
 }
 
-export default Dashboard;
+Dashboard.propTypes = {
+  logout: PropTypes.func
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.auth.isAuthenticated,
+  token: state.auth.token
+});
+
+export default connect(mapStateToProps, { logout })(Dashboard);

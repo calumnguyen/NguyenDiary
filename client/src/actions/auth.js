@@ -1,5 +1,8 @@
 // @access  Private
 import axios from 'axios'
+import {MAGIC_LINK_PUBLIC_KEY} from '../utils/constants';
+import { Magic } from "magic-sdk";
+
 import {
   USER_LOADED,
   AUTH_ERROR,
@@ -34,23 +37,27 @@ export const loadUser = () => async (dispatch) => {
 }
 
 // Login
-export const login = (username, password) => async (dispatch) => {
+export const login = (values) => async (dispatch) => {
   dispatch({
     type: AUTH_LOADING,
   })
+  
+  const DID = await new Magic(
+    MAGIC_LINK_PUBLIC_KEY
+  ).auth.loginWithMagicLink({ email: values.email });
+
   const config = {
     headers: {
       'Content-Type': 'application/json',
     },
+    wthCredentials: true,
+    credentials: "same-origin",
+    method: "POST",
+    headers: { Authorization: `Bearer ${DID}` }
   }
 
-  const body = JSON.stringify({
-    username,
-    password,
-  })
-
   try {
-    const res = await axios.post('/api/auth', body, config)
+    const res = await axios.post('/api/auth', {}, config)
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,

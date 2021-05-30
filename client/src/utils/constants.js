@@ -1,2 +1,1 @@
-export const default_articles=10;
-export const default_words=10;
+export const MAGIC_LINK_PUBLIC_KEY='pk_test_DCB03691FD035542';

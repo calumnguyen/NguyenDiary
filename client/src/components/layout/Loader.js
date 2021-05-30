@@ -1,14 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import LogoImg from '../../assets/loading-img.gif';
 
-const Loader = ({ auth, userLoading, articlesLoading, emailConfigLoading, wordsLoading, bugsLoading }) => {
-  if(auth.loading || userLoading || articlesLoading || emailConfigLoading || wordsLoading || bugsLoading){
+const Loader = ({ auth, userLoading }) => {
+  if(auth.loading || userLoading){
     return (
       <div className='loaderContainer'>
         <div className='loader'>
           <img
-            src='/assets/logo-icon.gif'
+            src={LogoImg}
             alt='Loader'
             className='loader-img'
             width='100'
@@ -31,14 +32,11 @@ const Loader = ({ auth, userLoading, articlesLoading, emailConfigLoading, wordsL
 
 Loader.propTypes = {
   authLoading: PropTypes.bool,
+  userLoading: PropTypes.bool
 };
 
 const mapStateToProps = (state) => ({
   userLoading: state.user.loading,
-  articlesLoading: state.articles.loading,
-  emailConfigLoading: state.emailConfig.loading,
-  wordsLoading: state.words.loading,
-  bugsLoading: state.reportBug.loading,
-  auth: state.auth,
+  auth: state.auth.loading,
 });
 export default connect(mapStateToProps)(Loader);

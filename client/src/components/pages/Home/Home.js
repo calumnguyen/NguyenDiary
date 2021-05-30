@@ -2,10 +2,16 @@ import React, { PureComponent } from "react";
 import "./Home.css";
 import ProfileCard from "./ProfileCard";
 import { Magic } from "magic-sdk";
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { Redirect } from 'react-router-dom';
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
+import Alert from '../../layout/Alert';
+import Loader from '../../layout/Loader';
+import MyLoader from '../../layout/MyLoader';
+import Spinner from '../../layout/Spinner';
+import {MAGIC_LINK_PUBLIC_KEY} from '../../../utils/constants';
+
 // import { confirmAlert } from 'react-confirm-alert';
 // import 'react-confirm-alert/src/react-confirm-alert.css';
 // import DatePicker from 'react-datepicker';
@@ -14,61 +20,78 @@ import { Redirect } from 'react-router-dom';
 // import { OCAlert } from '@opuscapita/react-alerts';
 
 // Actions
-import {getAllUsers} from '../../../actions/user';
-
+import { getAllUsers } from "../../../actions/user";
+import {
+  login,
+  logout
+} from "../../../actions/auth";
 
 export class Home extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      allUsers : []
+      allUsers: [],
     };
   }
   // process.env.NODE_ENV === "production"
   // ? process.env.magic_api_key_publish
   // : process.env.REACT_APP_magic_api_key_publish
   handleSignInRequest = async (values) => {
-    const DID = await new Magic(
-      'pk_test_DCB03691FD035542'
-    ).auth.loginWithMagicLink({ email: values.email });
-
-    const authRequest = await fetch("/api/users/login", {
-      wthCredentials: true,
-      credentials: "same-origin",
-      method: "POST",
-      headers: { Authorization: `Bearer ${DID}` },
-    });
-    console.log(authRequest);
-    if (authRequest.ok) {
-      this.props.history.push("/dashboard");
-    } else {
-      console.log("Error in Client Authentication");
+    await this.props.login(values);
+    if(this.props.isAuthenticated){
+      this.props.history.push('/dashboard');
+    } else{
+      alert("error")
     }
+    // const DID = await new Magic(
+    //   MAGIC_LINK_PUBLIC_KEY
+    // ).auth.loginWithMagicLink({ email: values.email });
+
+    // const authRequest = await fetch("/api/auth", {
+    //   wthCredentials: true,
+    //   credentials: "same-origin",
+    //   method: "POST",
+    //   headers: { Authorization: `Bearer ${DID}` },
+    // });
+    // if (authRequest.ok) {
+    //   this.props.history.push("/dashboard");
+    // } else {
+    //   console.log("Error in Client Authentication");
+    // }
   };
 
   async componentDidMount() {
     await this.props.getAllUsers();
-    this.setState({allUsers: this.props.allUsers});
+    this.setState({ allUsers: this.props.allUsers });
   }
 
   allProfiles = () => {
-    let profiles = []
-    if(this.state.allUsers && this.state.allUsers.length>0){
-      profiles = this.state.allUsers.map((profile)=> {
+    let profiles = [];
+    if (this.state.allUsers && this.state.allUsers.length > 0) {
+      profiles = this.state.allUsers.map((profile) => {
         return (
           <div className="col-sm-3">
-            <ProfileCard profile={profile} handleSignInRequest={this.handleSignInRequest}/>
+            <ProfileCard
+              key={profile.information.username}
+              profile={profile}
+              handleSignInRequest={this.handleSignInRequest}
+            />
           </div>
         );
-      })
+      });
     }
     return profiles;
-  }
+  };
 
   render() {
     return (
       <>
         {/* Redirect to /dashboard is auth cookies is set */}
+        {/* <Loader /> */}
+        <MyLoader/>
+        {
+          (this.props.token) && <Redirect to='/dashboard'></Redirect>
+        }
         <section className="home">
           <div className="container">
             <div className="col-sm-12">
@@ -78,10 +101,7 @@ export class Home extends PureComponent {
                   Choose your profile, and we will send you an email to login
                 </p>
               </div>
-
-              <div className="row profiles">
-                {this.allProfiles()}
-              </div>
+              <div className="row profiles">{this.allProfiles()}</div>
             </div>
           </div>
         </section>
@@ -97,8 +117,8 @@ Home.propTypes = {
 
 const mapStateToProps = (state) => ({
   allUsers: state.user.users,
+  isAuthenticated: state.auth.isAuthenticated,
+  token: state.auth.token
 });
 
-export default connect(mapStateToProps, { getAllUsers })(
-  Home
-);
+export default connect(mapStateToProps, { getAllUsers,login, logout })(Home);

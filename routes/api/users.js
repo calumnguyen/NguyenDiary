@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 const config = require("config");
 const moment = require("moment");
-const { Magic } = require('@magic-sdk/admin');
+const { Magic } = require("@magic-sdk/admin");
 const User = require("../../models/User");
 const magic = new Magic(process.env.magic_api_key_secret);
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
+const auth = require("../../middleware/auth");
 
 // @route   GET api/users
 // @desc    Gets all the users from the DB
@@ -14,7 +15,7 @@ const passport = require('passport');
 router.get("/", async (req, res) => {
   try {
     const allUsers = await User.find();
-    res.status(200).json({msg: "success", allUsers});
+    res.status(200).json({ msg: "success", allUsers });
   } catch (err) {
     console.log(err);
     res.status(500).send({ msg: "Server Error" });
@@ -24,14 +25,14 @@ router.get("/", async (req, res) => {
 // @route   POST api/users/add
 // @desc    add a user in DB
 // @access  Private
-router.post('/add', async (req, res) => {
+router.post("/add", auth, async (req, res) => {
   const body = req.body;
-  try{
+  try {
     const user = new User(body);
     user.save();
     res.status(200).json(user);
-  } catch(err){
-      res.status(400).json({"error":err})
+  } catch (err) {
+    res.status(400).json({ error: err });
   }
 });
 
@@ -48,37 +49,42 @@ router.post("/logout", async (req, res) => {
 
 // @route   POST api/users/login
 // @desc    logs in users by DIDToken
-// @access  Private
+// @access  Public
 router.post("/login", async (req, res) => {
   try {
     const DidToken = magic.utils.parseAuthorizationHeader(
       req.headers.authorization
     );
     const user = await magic.users.getMetadataByToken(DidToken);
-    
+
     //generate token
-    const sub = '123abc';
-    const token = jwt.sign({
-        "iss": "DiaryServer",
-        "exp": Math.floor(Date.now()/1000) + (60*5),
-        "sub": sub,
-        "nonce": Math.random().toString(36).substring(2,15) + Math.random().toString(36).substring(2,15)
-    }, process.env.jwtSecret)
+    const sub = "123abc";
+    const token = jwt.sign(
+      {
+        iss: "DiaryServer",
+        exp: Math.floor(Date.now() / 1000) + 60 * 5,
+        sub: sub,
+        nonce:
+          Math.random().toString(36).substring(2, 15) +
+          Math.random().toString(36).substring(2, 15),
+      },
+      process.env.jwtSecret
+    );
 
     //set cookies here
     let options = {
-      maxAge: 1000 * 60 * 15, // would expire after 15 minutes
+      maxAge: 1000 * 60 * 60, // would expire after 60 minutes
       httpOnly: true, // The cookie only accessible by the web server
       signed: true, // Indicates if the cookie should be signed
     };
 
-    res.cookie("token", token, options);
-    res.cookie("authed", true, { httpOnly: false });
-    
-    res.status(200).end();
+    // res.cookie("token", token, options);
+    // res.cookie("authed", true, { httpOnly: false });
+
+    res.status(200).json({ token });
   } catch (err) {
-    console.log("Error in server",err);
-    res.status(500).json({ msg: "Server error", err });
+    console.log(err);
+    res.status(500).json({ errors: [{ msg: "Server error" }] });
   }
 });
 
