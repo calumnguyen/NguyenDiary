@@ -14,7 +14,7 @@ import PrivateRoute from "./routing/PrivateRoute";
 import { Provider } from "react-redux";
 import store from "./store";
 import Home from "./components/pages/Home/Home";
-import Dashboard from "./components/pages/Dashboard";
+import Dashboard from "./components/pages/Dashboard/Dashboard";
 
 function App() {
   return (
