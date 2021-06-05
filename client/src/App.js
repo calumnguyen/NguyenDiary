@@ -16,6 +16,10 @@ import store from "./store";
 import Home from "./components/pages/Home/Home";
 import Dashboard from "./components/pages/Dashboard/Dashboard";
 
+if (localStorage.token) {
+  setAuthToken(localStorage.token);
+}
+
 function App() {
   return (
     <Provider store={store}>
@@ -25,7 +29,7 @@ function App() {
           {/* <Route exact path="/Login" component={Login} /> */}
 
           {/* Dashboard */}
-          <Route exact path="/dashboard" component={Dashboard} />
+          <PrivateRoute exact path="/dashboard" component={Dashboard} />
 
           {/* users */}
           {/* <PrivateRoute exact path="/user/adduser" component={AddUser} />

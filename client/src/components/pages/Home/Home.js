@@ -9,7 +9,6 @@ import { Redirect } from "react-router-dom";
 import Alert from '../../layout/Alert';
 import Loader from '../../layout/Loader';
 import MyLoader from '../../layout/MyLoader';
-import Spinner from '../../layout/Spinner';
 import {MAGIC_LINK_PUBLIC_KEY} from '../../../utils/constants';
 
 // import { confirmAlert } from 'react-confirm-alert';
@@ -86,7 +85,6 @@ export class Home extends PureComponent {
   render() {
     return (
       <>
-        {/* Redirect to /dashboard is auth cookies is set */}
         {/* <Loader /> */}
         <MyLoader/>
         {

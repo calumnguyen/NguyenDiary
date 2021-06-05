@@ -1,7 +1,7 @@
 {
   "mongoProdURI": "mongodb+srv://admin-calum:QPE9xzsiYfExnWy4@drops.aqp0q.mongodb.net/NguyenDiary?retryWrites=true&w=majority",
   "mongoLocalURI": "mongodb://localhost:27017/nguyenDiary",
-  "jwtSecret": "ngDIARYk**dsn()",
+  "jwtSecret": "ngDIARYk**dsn()*889dad",
   "cloud_name": "hw93eukdo",
   "api_key": "472874284989916",
   "api_secret": "cqVqy74KraATeqPDWb0hxOODxbE",

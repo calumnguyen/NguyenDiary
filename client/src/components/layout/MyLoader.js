@@ -2,15 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import LogoImg from "../../assets/loading-img.gif";
-import "./myLoader.css";
-const MyLoader = ({ auth, userLoading }) => {
-  if (auth.loading || userLoading) {
+import "./MyLoader.css";
+
+const MyLoader = ({ authLoading, userLoading }) => {
+  if (authLoading || userLoading) {
     return (
-      <div>
-        <div class="spinner">
-          <div class="double-bounce1"></div>
-          <div class="double-bounce2"></div>
-        </div>
+      <div className="spinner">
+        <div className="double-bounce1"></div>
+        <div className="double-bounce2"></div>
       </div>
     );
   } else {
@@ -26,6 +25,6 @@ MyLoader.propTypes = {
 
 const mapStateToProps = (state) => ({
   userLoading: state.user.loading,
-  auth: state.auth.loading,
+  authLoading: state.auth.loading,
 });
 export default connect(mapStateToProps)(MyLoader);

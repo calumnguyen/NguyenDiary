@@ -9,6 +9,9 @@ const UserSchema = new Schema(
         unique: true,
         required: true,
       },
+      tagline: {
+        type: String
+      },
       fullName: {
         type: String,
         required: true,
