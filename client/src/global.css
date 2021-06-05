@@ -2,3 +2,34 @@
 .App {
   margin: 0;
 }
+.btn-theme-orange{
+  background: var(--theme-orange);
+  border-color: var(--theme-orange);
+}
+
+.text-theme-orange{
+  color: var(--theme-orange);
+}
+.text-theme-white{
+  color: var(--theme-white);
+}
+
+.full-height-vh{
+  height: 100vh;
+}
+
+body {
+  margin: 0;
+  font-family: 'Montserrat', 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+  background: var(--theme-black);
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

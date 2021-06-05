@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import "./Home.css";
+import "./Home.scss";
 import ProfileCard from "./ProfileCard";
 import { Magic } from "magic-sdk";
 import PropTypes from "prop-types";

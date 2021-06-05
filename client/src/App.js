@@ -15,6 +15,7 @@ import { Provider } from "react-redux";
 import store from "./store";
 import Home from "./components/pages/Home/Home";
 import Dashboard from "./components/pages/Dashboard/Dashboard";
+import Error from "./components/pages/Error";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -32,8 +33,9 @@ function App() {
           <PrivateRoute exact path="/dashboard" component={Dashboard} />
 
           {/* users */}
-          {/* <PrivateRoute exact path="/user/adduser" component={AddUser} />
-          <PrivateRoute exact path="/Error" component={Error} /> */}
+          {/* <PrivateRoute exact path="/user/adduser" component={AddUser} /> */}
+          <PrivateRoute exact path="/Error" component={Error} />
+          <Route path="*" component={Error} />
         </Switch>
       </Router>
     </Provider>
