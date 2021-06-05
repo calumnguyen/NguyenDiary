@@ -56,7 +56,7 @@ export class Dashboard extends Component {
           <OCAlertsProvider />
           <section className="dashboard">
             <div className="container">
-              <div className="row mt-5">
+              <div className="row mt-5 reverse-col-flex">
                 <div className="col-sm-8">
                   <div className="userProfile">
                     <div className="profileImg">
@@ -92,7 +92,7 @@ export class Dashboard extends Component {
                   </div>
                 </div>
               </div>
-              <div className="row customMargin">
+              <div className="row customMargin p-3">
                 <div className="col-sm-4">
                   <MyCalendar
                     selectedDate={this.state.selectedDate}

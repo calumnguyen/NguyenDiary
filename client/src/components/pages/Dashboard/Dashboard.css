@@ -483,4 +483,11 @@ abbr[title] {
     margin-top: 45px;
     margin-bottom: 20px;
   }
+  .reverse-col-flex{
+    flex-direction: column-reverse;
+    padding: 20px;
+  }
+  .reverse-col-flex .userProfile{
+    margin-top: 50px;
+  }
 }
