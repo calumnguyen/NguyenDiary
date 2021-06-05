@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import spinner from '../../assets/loading-img.gif'
+import spinner from '../../assets/logo.png'
 
 export const Spinner = () => (
   <Fragment>

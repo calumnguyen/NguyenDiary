@@ -8,10 +8,8 @@ import {
   GET_USERS,
   PASSWORD_ERROR,
   PASSWORD_UPDATED,
-  CODE_VERIFIED,
   VERIFCATION_ERROR,
   PASSWORD_CONFIRMATION,
-  GET_ASSIGNED_ARTICLES,
 } from "../actions/types";
 
 const initialState = {
@@ -100,12 +98,6 @@ export default function (state = initialState, action) {
         loading: false,
         passwordUpdated: true,
       };
-    case CODE_VERIFIED:
-      return {
-        ...state,
-        loading: false,
-        codeverified: true,
-      };
     case VERIFCATION_ERROR:
       return {
         ...state,
@@ -117,12 +109,6 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         passwordConfirmed: true,
-      };
-    case GET_ASSIGNED_ARTICLES:
-      return {
-        ...state,
-        loading: false,
-        assignedArticles: payload,
       };
     default:
       return state;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import LogoImg from '../../assets/loading-img.gif';
+import LogoImg from '../../assets/logo.png';
 
 const Loader = ({ auth, userLoading }) => {
   if(auth.loading || userLoading){

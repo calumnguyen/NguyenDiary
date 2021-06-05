@@ -41,7 +41,7 @@ export const login = (values) => async (dispatch) => {
   dispatch({
     type: AUTH_LOADING,
   })
-  
+  //Get magic Link DID token
   const DID = await new Magic(
     MAGIC_LINK_PUBLIC_KEY
   ).auth.loginWithMagicLink({ email: values.email });
