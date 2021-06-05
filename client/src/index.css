@@ -41,11 +41,13 @@
   --theme-orange: #EB5E0B;
   --theme-black: #0D0C0C;
   --theme-white: #A3D2CA;
-
+  --theme-gray: #C4C4C4;
   --sidebar-width: 100px;
   --toggler-size: 30px;
 }
-
+.text-theme-orange{
+  color: var(--theme-orange);
+}
 body {
   margin: 0;
   font-family: 'Montserrat', 'Segoe UI', 'Roboto', 'Oxygen',

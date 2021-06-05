@@ -6,9 +6,11 @@ import "./MyLoader.css";
 const MyLoader = ({ authLoading, userLoading }) => {
   if (authLoading || userLoading) {
     return (
-      <div className="spinner">
-        <div className="double-bounce1"></div>
-        <div className="double-bounce2"></div>
+      <div className="myLoader">
+          <div className="spinner">
+            <div className="double-bounce1"></div>
+            <div className="double-bounce2"></div>
+          </div>
       </div>
     );
   } else {

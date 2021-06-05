@@ -12,6 +12,7 @@
     "magic-sdk": "^4.3.0",
     "moment": "^2.29.1",
     "moment-timezone": "^0.5.32",
+    "node-sass": "^6.0.0",
     "react": "^16.13.1",
     "react-awesome-modal": "^2.0.5",
     "react-bootstrap": "^1.4.0",

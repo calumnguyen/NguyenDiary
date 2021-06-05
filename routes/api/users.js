@@ -8,6 +8,14 @@ const magic = new Magic(process.env.magic_api_key_secret);
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
 const auth = require("../../middleware/auth");
+const cloudinary = require("cloudinary");
+
+// cloundinary configuration
+cloudinary.config({
+  cloud_name: config.get("cloud_name"),
+  api_key: config.get("api_key"),
+  api_secret: config.get("api_secret"),
+});
 
 // @route   GET api/users
 // @desc    Gets all the users from the DB
@@ -47,41 +55,50 @@ router.post("/logout", async (req, res) => {
   //delete cookies and redirect to login page
 });
 
-// @route   POST api/users/login
-// @desc    logs in users by DIDToken
-// @access  Public
-router.post("/login", async (req, res) => {
+// @route   POST api/users/edit-image
+// @desc    Updates user image
+// @access  Private
+router.post("/edit-image", auth, async (req, res) => {
   try {
-    const DidToken = magic.utils.parseAuthorizationHeader(
-      req.headers.authorization
-    );
-    const user = await magic.users.getMetadataByToken(DidToken);
+    // default male image: 'https://res.cloudinary.com/hw93eukdo/image/upload/v1610526077/male_iypciz.png';
+    // default female image: 'https://res.cloudinary.com/hw93eukdo/image/upload/v1610526077/female_rmmbsp.png';
+    // default others image: 'https://res.cloudinary.com/hw93eukdo/image/upload/v1610526077/other_mxpm4r.png';
 
-    //generate token
-    const sub = "123abc";
-    const token = jwt.sign(
+    //get previous avatar
+    let prevAvatar = await User.findOne(
       {
-        iss: "DiaryServer",
-        exp: Math.floor(Date.now() / 1000) + 60 * 5,
-        sub: sub,
-        nonce:
-          Math.random().toString(36).substring(2, 15) +
-          Math.random().toString(36).substring(2, 15),
+        _id: req.body.userId,
       },
-      process.env.jwtSecret
+      { information: 1 }
     );
 
-    //set cookies here
-    let options = {
-      maxAge: 1000 * 60 * 60, // would expire after 60 minutes
-      httpOnly: true, // The cookie only accessible by the web server
-      signed: true, // Indicates if the cookie should be signed
-    };
+    prevAvatar = prevAvatar.information.avatar;
+    let prevAvatarName = prevAvatar.substring(prevAvatar.lastIndexOf("/") + 1);
+    let prevAvatarNameWithoutExtension = prevAvatarName.substring(
+      0,
+      prevAvatarName.indexOf(".")
+    );
 
-    // res.cookie("token", token, options);
-    // res.cookie("authed", true, { httpOnly: false });
-
-    res.status(200).json({ token });
+    cloudinary.uploader.upload(req.body.updatedImage, async function (result) {
+      await User.updateOne(
+        { _id: req.body.userId },
+        {
+          $set: {
+            "information.avatar": result.secure_url,
+          },
+        }
+      );
+      //destory previous image
+      await cloudinary.v2.uploader.destroy(
+        prevAvatarNameWithoutExtension,
+        function (error, result2) {
+          if(error){
+            res.status(500).json({ errors: [{ msg: "Could not save the image" }] });
+          }
+        }
+      );
+      res.status(200).json({ msg: "Profile Image upadated successfully" });
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({ errors: [{ msg: "Server error" }] });

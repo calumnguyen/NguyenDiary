@@ -1,8 +1,7 @@
 import axios from "axios";
 import {
-
   USER_LOADING,
- USER_SAVED,
+  USER_SAVED,
   USER_ERROR,
   GET_USERS,
   GET_USER,
@@ -15,49 +14,45 @@ import {
   CODE_VERIFIED,
   VERIFCATION_ERROR,
   PASSWORD_CONFIRMATION,
-  GET_ASSIGNED_ARTICLES
+  GET_ASSIGNED_ARTICLES,
 } from "./types";
 import { setAlert } from "./alert";
 
 // Add new user
 export const addNewUser = (user) => async (dispatch) => {
-    dispatch({ type: USER_LOADING });
-  
-   const config = {
-      headers: {
-          'content-type': 'multipart/form-data'
-      }
-  }
-  
+  dispatch({ type: USER_LOADING });
+
+  const config = {
+    headers: {
+      "content-type": "multipart/form-data",
+    },
+  };
 
   try {
-      
+    const res = await axios.post("/api/users/add", user, config);
+    dispatch({
+      type: USER_SAVED,
+      payload: res.data,
+    });
 
-      const res = await axios.post("/api/users/add",user, config);
-      dispatch({
-        type: USER_SAVED,
-        payload:res.data
-      });
-     
-      dispatch(setAlert(res.data.msg, "success"));
-
-    } catch (err) {
-      const errors = err.response.data.errors;
-      if (errors) {
-        errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
-      }
-      dispatch({
-        type: USER_ERROR,
-      });
+    dispatch(setAlert(res.data.msg, "success"));
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
     }
-  };
+    dispatch({
+      type: USER_ERROR,
+    });
+  }
+};
 
 // get All Users
 export const getAllUsers = () => async (dispatch) => {
   dispatch({ type: USER_LOADING });
   try {
     const res = await axios.get(`/api/users`);
-    if(res.data) {
+    if (res.data) {
       dispatch({
         type: GET_USERS,
         payload: res.data.allUsers,
@@ -71,23 +66,23 @@ export const getAllUsers = () => async (dispatch) => {
   }
 };
 
-  // Find user
-  export const findUsers = (searchVal) => async (dispatch) => {
-    dispatch({ type: USER_LOADING });
-    try {
-      const res = await axios.get(`/api/users/search/${searchVal}`);
-  
-      dispatch({
-        type: GET_USERS,
-        payload: res.data,
-      });
-    } catch (err) {
-      dispatch({
-        type: USERS_ERROR,
-        payload: err.response,
-      });
-    }
-  };
+// Find user
+export const findUsers = (searchVal) => async (dispatch) => {
+  dispatch({ type: USER_LOADING });
+  try {
+    const res = await axios.get(`/api/users/search/${searchVal}`);
+
+    dispatch({
+      type: GET_USERS,
+      payload: res.data,
+    });
+  } catch (err) {
+    dispatch({
+      type: USERS_ERROR,
+      payload: err.response,
+    });
+  }
+};
 
 // Get User by ID
 export const getUser = (id) => async (dispatch) => {
@@ -112,10 +107,10 @@ export const updateUser = (user, id) => async (dispatch) => {
   dispatch({ type: USERS_LOADING });
   const config = {
     headers: {
-        'content-type': 'multipart/form-data'
-    }
-}
-  
+      "content-type": "multipart/form-data",
+    },
+  };
+
   try {
     const res = await axios.post(`/api/users/${id}`, user, config);
 
@@ -125,7 +120,6 @@ export const updateUser = (user, id) => async (dispatch) => {
     });
     dispatch(setAlert(res.data.msg, "success"));
     dispatch(getAllUsers());
-
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
@@ -136,12 +130,30 @@ export const updateUser = (user, id) => async (dispatch) => {
     });
   }
 };
-// const didToken = await magic.auth.loginWithMagicLink({ email });
-// await fetch(`${serverUrl}user/login`, {
-//   headers: new Headers({
-//     Authorization: "Bearer " + didToken
-//   }),
-//   wthCredentials: true,
-//   credentials: "same-origin",
-//   method: "POST"
-// });
+
+//update profile image
+export const updateUserImage = (userId, updatedImage) => async (dispatch) => {
+  dispatch({ type: USER_LOADING });
+  const config = {
+    headers: {
+      "content-type": "application/json",
+    },
+  };
+  try {
+    const res = await axios.post(`/api/users/edit-image`, {userId, updatedImage}, config);
+
+    dispatch({
+      type: USER_UPDATED,
+      payload: res.data,
+    });
+    // dispatch(setAlert(res.data.msg, "success"));
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+    }
+    dispatch({
+      type: USERS_ERROR,
+    });
+  }
+};

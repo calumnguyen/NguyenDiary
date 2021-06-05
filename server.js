@@ -13,9 +13,12 @@ connectDB();
 
 
 // Middlewares
-app.use(express.json({ extended: false }));
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(cookieParser(`${process.env.jwtSecret}`));
+
+app.use(express.json({limit: '200mb',extended: false}));
+app.use(express.urlencoded({limit: '200mb'}));
+
 
 // Routes
 app.use('/api/users',require('./routes/api/users'));

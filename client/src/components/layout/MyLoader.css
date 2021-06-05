@@ -49,3 +49,27 @@
     -webkit-transform: scale(1);
   }
 }
+.myLoader {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  background: var(--theme-black);
+  opacity: 0.5;
+  z-index: 3;
+  cursor: progress;
+}
+.spinner{
+  position: initial;
+}
+.double-bounce1,
+.double-bounce2 {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--theme-orange);
+  opacity: 0.6;
+  position: absolute;
+  top: 37vh;
+  left: 45vw;
+  animation: sk-bounce 2s infinite ease-in-out;
+}
