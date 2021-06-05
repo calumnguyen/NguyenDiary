@@ -73,12 +73,22 @@ router.post("/edit-image", auth, async (req, res) => {
     );
 
     prevAvatar = prevAvatar.information.avatar;
-    let prevAvatarName = prevAvatar.substring(prevAvatar.lastIndexOf("/") + 1);
-    let prevAvatarNameWithoutExtension = prevAvatarName.substring(
-      0,
-      prevAvatarName.indexOf(".")
-    );
-
+    if(prevAvatar){
+      let prevAvatarName = prevAvatar.substring(prevAvatar.lastIndexOf("/") + 1);
+      let prevAvatarNameWithoutExtension = prevAvatarName.substring(
+        0,
+        prevAvatarName.indexOf(".")
+      );
+      await cloudinary.v2.uploader.destroy(
+        prevAvatarNameWithoutExtension,
+        function (error, result2) {
+          if(error){
+            res.status(500).json({ errors: [{ msg: "Could not update the image" }] });
+          }
+        }
+      );
+    }
+  
     cloudinary.uploader.upload(req.body.updatedImage, async function (result) {
       await User.updateOne(
         { _id: req.body.userId },
@@ -89,14 +99,7 @@ router.post("/edit-image", auth, async (req, res) => {
         }
       );
       //destory previous image
-      await cloudinary.v2.uploader.destroy(
-        prevAvatarNameWithoutExtension,
-        function (error, result2) {
-          if(error){
-            res.status(500).json({ errors: [{ msg: "Could not save the image" }] });
-          }
-        }
-      );
+      
       res.status(200).json({ msg: "Profile Image upadated successfully" });
     });
   } catch (err) {
