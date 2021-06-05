@@ -36,12 +36,11 @@ router.post("/", async (req, res) => {
     const userInDB = await User.findOne({ "information.email": user.email });
     if (userInDB) {
       //generate token
-      const sub = "123abc";
       const token = jwt.sign(
         {
           ...user,
-          exp: Math.floor(Date.now() / 1000) + 60 * 5,
-          sub: sub,
+          exp: Math.floor(Date.now() / 1000) + 60 * 50,
+          sub: "csdsr3er4ew",
           nonce:
             Math.random().toString(36).substring(2, 15) +
             Math.random().toString(36).substring(2, 15),

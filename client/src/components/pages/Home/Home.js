@@ -51,9 +51,9 @@ export class Home extends PureComponent {
   allProfiles = () => {
     let profiles = [];
     if (this.state.allUsers && this.state.allUsers.length > 0) {
-      profiles = this.state.allUsers.map((profile) => {
+      profiles = this.state.allUsers.map((profile,idx) => {
         return (
-          <div className="col-sm-3">
+          <div className="col-sm-3" key={idx}>
             <ProfileCard
               key={profile.information.username}
               profile={profile}
@@ -70,7 +70,7 @@ export class Home extends PureComponent {
     return (
       <>
         <MyLoader />
-        <Alert />
+        {/* <Alert /> */}
         <OCAlertsProvider />
         {
           (this.props.isAuthenticated) && <Redirect to="/dashboard"/>
