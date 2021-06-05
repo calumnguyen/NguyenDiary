@@ -154,8 +154,6 @@ Dashboard.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  token: state.auth.token,
   auth: state.auth,
 });
 

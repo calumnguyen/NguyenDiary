@@ -20,7 +20,7 @@ import { OCAlert } from "@opuscapita/react-alerts";
 
 // Actions
 import { getAllUsers } from "../../../actions/user";
-import { login } from "../../../actions/auth";
+import { login, loadUser } from "../../../actions/auth";
 
 export class Home extends PureComponent {
   constructor(props) {
@@ -28,6 +28,9 @@ export class Home extends PureComponent {
     this.state = {
       allUsers: [],
     };
+  }
+  componentDidMount() {
+    this.props.loadUser();
   }
   handleSignInRequest = async (values) => {
     await this.props.login(values);
@@ -69,6 +72,9 @@ export class Home extends PureComponent {
         <MyLoader />
         <Alert />
         <OCAlertsProvider />
+        {
+          (this.props.isAuthenticated) && <Redirect to="/dashboard"/>
+        }
         <section className="home">
           <div className="container">
             <div className="col-sm-12">
@@ -90,6 +96,7 @@ export class Home extends PureComponent {
 Home.propTypes = {
   getAllUsers: PropTypes.func,
   loadUser: PropTypes.func,
+  login: PropTypes.func
 };
 
 const mapStateToProps = (state) => ({
@@ -97,4 +104,4 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { getAllUsers, login })(Home);
+export default connect(mapStateToProps, { getAllUsers, login, loadUser })(Home);
