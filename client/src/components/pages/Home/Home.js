@@ -6,24 +6,21 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router-dom";
-import Alert from '../../layout/Alert';
-import Loader from '../../layout/Loader';
-import MyLoader from '../../layout/MyLoader';
-import {MAGIC_LINK_PUBLIC_KEY} from '../../../utils/constants';
+import Alert from "../../layout/Alert";
+import Loader from "../../layout/Loader";
+import MyLoader from "../../layout/MyLoader";
+import { MAGIC_LINK_PUBLIC_KEY } from "../../../utils/constants";
 
 // import { confirmAlert } from 'react-confirm-alert';
 // import 'react-confirm-alert/src/react-confirm-alert.css';
 // import DatePicker from 'react-datepicker';
 // import 'react-datepicker/dist/react-datepicker.css';
-// import { OCAlertsProvider } from '@opuscapita/react-alerts';
-// import { OCAlert } from '@opuscapita/react-alerts';
+import { OCAlertsProvider } from "@opuscapita/react-alerts";
+import { OCAlert } from "@opuscapita/react-alerts";
 
 // Actions
 import { getAllUsers } from "../../../actions/user";
-import {
-  login,
-  logout
-} from "../../../actions/auth";
+import { login } from "../../../actions/auth";
 
 export class Home extends PureComponent {
   constructor(props) {
@@ -32,31 +29,15 @@ export class Home extends PureComponent {
       allUsers: [],
     };
   }
-  // process.env.NODE_ENV === "production"
-  // ? process.env.magic_api_key_publish
-  // : process.env.REACT_APP_magic_api_key_publish
   handleSignInRequest = async (values) => {
     await this.props.login(values);
-    if(this.props.isAuthenticated){
-      this.props.history.push('/dashboard');
-    } else{
-      alert("error")
+    if (this.props.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    } else {
+      OCAlert.alertWarning("Could not log you in :(", {
+        timeOut: 3000,
+      });
     }
-    // const DID = await new Magic(
-    //   MAGIC_LINK_PUBLIC_KEY
-    // ).auth.loginWithMagicLink({ email: values.email });
-
-    // const authRequest = await fetch("/api/auth", {
-    //   wthCredentials: true,
-    //   credentials: "same-origin",
-    //   method: "POST",
-    //   headers: { Authorization: `Bearer ${DID}` },
-    // });
-    // if (authRequest.ok) {
-    //   this.props.history.push("/dashboard");
-    // } else {
-    //   console.log("Error in Client Authentication");
-    // }
   };
 
   async componentDidMount() {
@@ -85,11 +66,9 @@ export class Home extends PureComponent {
   render() {
     return (
       <>
-        {/* <Loader /> */}
-        <MyLoader/>
-        {
-          (this.props.token) && <Redirect to='/dashboard'></Redirect>
-        }
+        <MyLoader />
+        <Alert />
+        <OCAlertsProvider />
         <section className="home">
           <div className="container">
             <div className="col-sm-12">
@@ -116,7 +95,6 @@ Home.propTypes = {
 const mapStateToProps = (state) => ({
   allUsers: state.user.users,
   isAuthenticated: state.auth.isAuthenticated,
-  token: state.auth.token
 });
 
-export default connect(mapStateToProps, { getAllUsers,login, logout })(Home);
+export default connect(mapStateToProps, { getAllUsers, login })(Home);

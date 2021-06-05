@@ -2,11 +2,16 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import moment from "moment";
+import { Redirect } from "react-router-dom";
+
 import "./Dashboard.css";
 import MyCalendar from "./MyCalendar";
 import MyImg from "../../../assets/img/default_profile_pics/male.png";
 import { loadUser, logout } from "../../../actions/auth";
-import MyLoader from '../../layout/MyLoader';
+import MyLoader from "../../layout/MyLoader";
+import { OCAlertsProvider } from "@opuscapita/react-alerts";
+import { OCAlert } from "@opuscapita/react-alerts";
+import Alert from "../../layout/Alert";
 
 const DATE_FORMAT = "DD/MM/YYYY";
 
@@ -46,7 +51,9 @@ export class Dashboard extends Component {
     if (this.state.user) {
       return (
         <>
-          <MyLoader/>
+          <MyLoader />
+          <Alert />
+          <OCAlertsProvider />
           <section className="dashboard">
             <div className="container">
               <div className="row mt-5">
@@ -134,8 +141,8 @@ export class Dashboard extends Component {
           </section>
         </>
       );
-    } else{
-      return <MyLoader/>;
+    } else {
+      return <MyLoader />;
     }
   }
 }
