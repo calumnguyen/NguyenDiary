@@ -16,6 +16,7 @@ import Alert from "../../layout/Alert";
 
 const DATE_FORMAT = "DD/MM/YYYY";
 const DATE_FORMAT_WITH_TIME = "h:mm A DD/MM/YYYY";
+
 export class Dashboard extends Component {
   static propTypes = {};
   constructor(props) {
@@ -78,6 +79,10 @@ export class Dashboard extends Component {
     let updatedHeaderTabs = [...this.state.headerTabs];
     updatedHeaderTabs.forEach((tab) => (tab.status = "inactive"));
     updatedHeaderTabs[idx].status = "active";
+    let currentTab = updatedHeaderTabs[idx];
+    updatedHeaderTabs.splice(idx,1);
+    updatedHeaderTabs.unshift(currentTab);
+    
     this.setState({
       headerTabs: updatedHeaderTabs,
       isHeaderToggleClicked: !this.state.isHeaderToggleClicked,
@@ -90,49 +95,74 @@ export class Dashboard extends Component {
   toggleHeaderOptions = () => {
     this.setState({ isHeaderToggleClicked: !this.state.isHeaderToggleClicked });
   };
+
   getFormBoxForMentalCalendar = () => {
-    let dateAfter7days = new Date(moment(new Date()).add(7,"days"));
-    let dateBefore7Days = new Date(moment(new Date()).subtract(7,"days"));
-    let isSelectedDateInPrev7Days = moment(this.state.selectedDate).isAfter(dateBefore7Days) && moment(this.state.selectedDate).isBefore(new Date());
-    let isSelectedDateInNext7Days = moment(this.state.selectedDate).isBefore(dateAfter7days) && moment(this.state.selectedDate).isAfter(new Date());
-    let isSelectedDateAfter7Days = moment(this.state.selectedDate).isAfter(dateAfter7days);
-    if(isSelectedDateInNext7Days || isSelectedDateInPrev7Days){
+    let todaysDate = new Date(
+      moment().millisecond(0).seconds(0).second(0).minute(0).hour(0)
+    );
+    let selectedDate = new Date(
+      moment(this.state.selectedDate).millisecond(0).seconds(0).second(0).minute(0).hour(0)
+    );
+
+    let dateAfter7days = new Date(moment(todaysDate).add(7, "days"));
+    let dateBefore7Days = new Date(moment(todaysDate).subtract(7, "days"));
+
+    // let dayDiff = moment(dateAfter7days).diff(selectedDate,"days");
+    // let hourDiff = moment(dateAfter7days).diff(selectedDate,"hours");
+    // let minDiff = moment(dateAfter7days).diff(selectedDate,"minutes");
+    // let secDiff = moment(dateAfter7days).diff(selectedDate,"seconds");
+    // console.log(dayDiff, hourDiff, minDiff, secDiff)
+
+    let isSelectedDateInPrev7Days =
+      moment(this.state.selectedDate).isAfter(dateBefore7Days) &&
+      moment(this.state.selectedDate).isSameOrBefore(todaysDate, "days");
+    let isSelectedDateInNext7Days =
+      moment(this.state.selectedDate).isBefore(dateAfter7days, "days") &&
+      moment(this.state.selectedDate).isAfter(todaysDate, "days");
+    let isSelectedDateAfter7Days = moment(
+      this.state.selectedDate
+    ).isSameOrAfter(dateAfter7days, "days");
+
+    if (isSelectedDateInPrev7Days) {
       return (
         <div className="formBox">
           <div className="">
             <button className="btn startFormBtn">Start Form</button>
           </div>
           <p className="startFormMsg">
-            You have time until 8:00pm{" "}
-            {moment(this.state.selectedDate).add(7, "days").format(DATE_FORMAT)}.
+            You have time until {" "}
+            {moment(selectedDate).add(7, "days").subtract(1,"minutes").format(DATE_FORMAT_WITH_TIME)}
+            .
           </p>
+          {/* <p className="startFormMsg">
+            There is {" "}
+            {`${dayDiff} days, ${hourDiff} hours, ${minDiff} minutes, ${secDiff} seconds`}
+            {" "} left
+          </p> */}
         </div>
       );
-    } else if(isSelectedDateAfter7Days){
+    } else if (isSelectedDateAfter7Days || isSelectedDateInNext7Days) {
       return (
         <div className="formBox">
-          <p className="startFormMsg">
-            Nothing here yet!{" "}
-          </p>
+          <p className="startFormMsg">Nothing here yet! </p>
           <p className="startFormMsg">
             Come back at{" "}
             <span className="text-theme-orange font-weight-bold">
               {moment(dateAfter7days).format(DATE_FORMAT_WITH_TIME)}
-            </span>
-             {" "}to fill out! You will have <span className="text-theme-orange font-weight-bold">7 days</span> after that. 
+            </span>{" "}
+            to fill out! You will have{" "}
+            <span className="text-theme-orange font-weight-bold">7 days</span>{" "}
+            after that.
           </p>
         </div>
       );
-    } else{
-      return(
+    } else {
+      return (
         <div className="formBox">
-          <p className="startFormMsg">
-            You can't edit this now.
-          </p>
+          <p className="startFormMsg">You can't edit this now.</p>
         </div>
-      ); 
+      );
     }
-    
   };
   getMentalCalendar = () => {
     return (
