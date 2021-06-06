@@ -148,7 +148,7 @@ export class Dashboard extends Component {
           <p className="startFormMsg">
             Come back at{" "}
             <span className="text-theme-orange font-weight-bold">
-              {moment(dateAfter7days).format(DATE_FORMAT_WITH_TIME)}
+              {moment(selectedDate).format(DATE_FORMAT_WITH_TIME)}
             </span>{" "}
             to fill out! You will have{" "}
             <span className="text-theme-orange font-weight-bold">7 days</span>{" "}
