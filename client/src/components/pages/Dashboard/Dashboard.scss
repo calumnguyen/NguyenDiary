@@ -14,20 +14,16 @@
 }
 .theme_calendar .react-calendar__tile.react-calendar__month-view__days__day {
   color: var(--theme-white);
-  margin: 2px;
 }
 .theme_calendar .react-calendar__tile.react-calendar__year-view__months__month {
   color: var(--theme-white);
-  margin: 2px;
 }
 .theme_calendar .react-calendar__tile.react-calendar__decade-view__years__year {
   color: var(--theme-white);
-  margin: 2px;
 }
 .theme_calendar
   .react-calendar__tile.react-calendar__century-view__decades__decade {
   color: var(--theme-white);
-  margin: 2px;
 }
 
 .theme_calendar
@@ -434,7 +430,7 @@ abbr[title] {
 }
 
 .headerToggle.wrapper .menu-toggler__line {
-  height: calc(var(--toggler-size) / 5);
+  height: calc(var(--toggler-size) / 10);
   background: Tomato;
   position: absolute;
   left: 0;
@@ -568,6 +564,15 @@ abbr[title] {
   }
 }
 
+.dashboard{
+
+  .theme_calendar .react-calendar__tile.react-calendar__month-view__days__day{
+    margin: 0;
+  }
+  .theme_calendar .react-calendar__tile.react-calendar__century-view__decades__decade, .theme_calendar .react-calendar__tile.react-calendar__decade-view__years__year, .theme_calendar .react-calendar__tile.react-calendar__month-view__days__day, .theme_calendar .react-calendar__tile.react-calendar__year-view__months__month{
+    margin: 0;
+  }
+}
 /* ############################### MEDIA QUERIES ############################# */
 /* Mobile Media Query */
 @media only screen and (max-width: 767px) {
