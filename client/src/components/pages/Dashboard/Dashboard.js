@@ -7,7 +7,8 @@ import { Redirect } from "react-router-dom";
 import "./Dashboard.scss";
 import MyCalendar from "./MyCalendar";
 import { loadUser, logout } from "../../../actions/auth";
-import { updateUserImage } from "../../../actions/user";
+import { getAllUsers, updateUserImage } from "../../../actions/user";
+
 import MyLoader from "../../layout/MyLoader";
 import { OCAlertsProvider } from "@opuscapita/react-alerts";
 import { OCAlert } from "@opuscapita/react-alerts";
@@ -34,6 +35,11 @@ export class Dashboard extends Component {
           slug: "updateimage",
         },
         {
+          name: "Accounts",
+          status: "inactive",
+          slug: "accounts",
+        },
+        {
           name: "Logout",
           status: "inactive",
           slug: "logout",
@@ -41,10 +47,11 @@ export class Dashboard extends Component {
       ],
       isHeaderToggleClicked: false,
       selectedTab: "mentalcalendar",
-      hiddenFileInputUpdateImage : React.createRef()
+      hiddenFileInputUpdateImage: React.createRef(),
     };
   }
   async componentDidMount() {
+    this.props.getAllUsers();
     await this.props.loadUser();
     if (this.props.auth && this.props.auth.user) {
       this.setState({ user: this.props.auth.user });
@@ -141,17 +148,24 @@ export class Dashboard extends Component {
           <div className="headerDesc">
             <ul className="list-group">
               {this.state.headerTabs.map((tab, idx) => {
-                return (
-                  <li
-                    key={idx}
-                    className={`list-group-item ${tab.status} ${
-                      this.state.isHeaderToggleClicked ? "show" : "hide"
-                    }`}
-                    onClick={() => this.handleTabChange(idx)}
-                  >
-                    {tab.name}
-                  </li>
-                );
+                if (
+                  tab.slug === "accounts" &&
+                  this.state.user.information.systemRole === "member"
+                ) {
+                  return null;
+                } else {
+                  return (
+                    <li
+                      key={idx}
+                      className={`list-group-item ${tab.status} ${
+                        this.state.isHeaderToggleClicked ? "show" : "hide"
+                      }`}
+                      onClick={() => this.handleTabChange(idx)}
+                    >
+                      {tab.name}
+                    </li>
+                  );
+                }
               })}
             </ul>
             <div className="headerToggle wrapper">
@@ -176,40 +190,40 @@ export class Dashboard extends Component {
       </div>
     );
   };
-  handleFileUploadChange = async (event) => {    
-    const file = event.target.files[0];    
-    if(!file) return;
+  handleFileUploadChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
     const imgBase64 = await this.convertBase64(file);
     await this.props.updateUserImage(this.state.user._id, imgBase64);
     await this.props.loadUser();
     if (this.props.auth && this.props.auth.user) {
       this.setState({ user: this.props.auth.user });
     }
-    if(this.props.userUpdated){
+    if (this.props.userUpdated) {
       OCAlert.alertSuccess("Profile Image Updated Successfully :)", {
         timeOut: 3000,
       });
-    } else{
+    } else {
       OCAlert.alertWarning("Could not edit profile image :(", {
         timeOut: 3000,
       });
     }
   };
-  convertBase64 = (file) =>{
-    return new Promise((resolve,reject)=>{
+  convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
       const fileReader = new FileReader();
       fileReader.readAsDataURL(file);
-      fileReader.onload = ()=>{
+      fileReader.onload = () => {
         resolve(fileReader.result);
-      }
-      fileReader.onerror=(error)=>{
+      };
+      fileReader.onerror = (error) => {
         reject(error);
-      }
-    })
-  }
+      };
+    });
+  };
   uploadImage = () => {
     this.state.hiddenFileInputUpdateImage.current.click();
-  }
+  };
   getUpdateImage = () => {
     return (
       <div className="row customMargin p-3 updateImage">
@@ -233,18 +247,82 @@ export class Dashboard extends Component {
                       className="img"
                     ></img>
                   </div>
-                  <button className="btn startFormBtn" onClick={this.uploadImage}>Edit</button>
+                  <button
+                    className="btn startFormBtn"
+                    onClick={this.uploadImage}
+                  >
+                    Edit
+                  </button>
                   <input
                     type="file"
                     ref={this.state.hiddenFileInputUpdateImage}
                     onChange={this.handleFileUploadChange}
-                    accept='image/jpeg,image/gif,image/jpg,image/png,image/x-eps'
-                    style={{display: 'none'}}
+                    accept="image/jpeg,image/gif,image/jpg,image/png,image/x-eps"
+                    style={{ display: "none" }}
                   />
                 </div>
                 <div className="col-sm-9">
-                  <h2 className="text-theme-orange mt-3">{this.state.user.information.fullName}</h2>
-                  <p className="startFormMsg">{this.state.user.information.email}</p>
+                  <h2 className="text-theme-orange mt-3">
+                    {this.state.user.information.fullName}
+                  </h2>
+                  <p className="startFormMsg">
+                    {this.state.user.information.email}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  getAccounts = () => {
+    return (
+      <div className="row customMargin p-3 getAccounts">
+        <div className="col-sm-2">
+          {this.props.allUsers.map((user) => {
+            return (
+              <div className="profileImg left mt-3">
+                <img
+                  src={user.information.avatar}
+                  className="img img-fluid"
+                ></img>
+              </div>
+            );
+          })}
+        </div>
+        <div className="col-sm-10">
+          <div className="diary">
+            <div className="formBox">
+              <div className="row">
+                {/* On edit give upload image feature */}
+                <div className="col-sm-3">
+                  <div className="profileImg">
+                    <img
+                      src={this.state.user.information.avatar}
+                      className="img"
+                    ></img>
+                  </div>
+                </div>
+                <div className="col-sm-9">
+                  <h2 className="text-theme-orange mt-3">
+                    {this.state.user.information.fullName}
+                  </h2>
+                  <p className="startFormMsg">
+                    {this.state.user.information.email}
+                  </p>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-sm-12">
+                  <div className="accountEditBtnSection">
+                    <button
+                      className="btn startFormBtn"
+                      onClick={this.uploadImage}
+                    >
+                      Edit
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -258,7 +336,7 @@ export class Dashboard extends Component {
       return (
         <>
           <MyLoader />
-          <Alert/>
+          <Alert />
           <OCAlertsProvider />
           <section className="dashboard">
             <div className="container">
@@ -268,6 +346,9 @@ export class Dashboard extends Component {
                 : null}
               {this.state.selectedTab === "updateimage"
                 ? this.getUpdateImage()
+                : null}
+              {this.state.selectedTab === "accounts"
+                ? this.getAccounts()
                 : null}
             </div>
           </section>
@@ -280,6 +361,7 @@ export class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
+  getAllUsers: PropTypes.func,
   logout: PropTypes.func,
   auth: PropTypes.object,
   loadUser: PropTypes.func,
@@ -287,7 +369,13 @@ Dashboard.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  userUpdated: state.user.saved
+  userUpdated: state.user.saved,
+  allUsers: state.user.users,
 });
 
-export default connect(mapStateToProps, { logout, loadUser,updateUserImage })(Dashboard);
+export default connect(mapStateToProps, {
+  logout,
+  loadUser,
+  updateUserImage,
+  getAllUsers,
+})(Dashboard);
