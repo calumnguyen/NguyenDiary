@@ -9,7 +9,6 @@ function MyCalendar(props) {
   let datesHavingEntry = props.allDates
     ? props.allDates.diary.map((day) => day.day)
     : null;
-  console.log(datesHavingEntry);
 
   const formatDate = (date, format) => {
     let daynumber = new Date(date).getDay();

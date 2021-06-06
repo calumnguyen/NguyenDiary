@@ -107,7 +107,9 @@
       }
     }
   }
-
+  .react-calendar__tile--active.react-calendar_single_whiteBorder_tile{
+    border-color: var(--theme-orange);
+  }
   /* For Both Active(Selected) and Now(Today) for Days*/
   .react-calendar__tile.react-calendar__tile--now.react-calendar__tile--active {
     background: var(--theme-orange);

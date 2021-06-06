@@ -12,7 +12,7 @@ import {
   updateUserImage,
   saveDiaryAnswers,
   getDiaryAnswers,
-  getAllDiaryDates
+  getAllDiaryDates,
 } from "../../../actions/user";
 
 import MyLoader from "../../layout/MyLoader";
@@ -76,7 +76,11 @@ class Dashboard extends Component {
   }
 
   handleDateChange = async (changedDate) => {
-    this.setState({ selectedDate: changedDate , formStarted : false, answeredQuestions: 0});
+    this.setState({
+      selectedDate: changedDate,
+      formStarted: false,
+      answeredQuestions: 0,
+    });
     let myDate = moment(changedDate).format("DD-MM-YYYY");
     await this.props.getDiaryAnswers(this.state.user._id, myDate);
     if (this.props.allAnswers) {
@@ -147,14 +151,14 @@ class Dashboard extends Component {
       ans2: this.state.diaryAnswers[1],
       ans3: this.state.diaryAnswers[2],
       ans4: this.state.diaryAnswers[3],
-      ans5: this.state.diaryAnswers[4]
-    }
-    await this.props.saveDiaryAnswers(this.state.user._id,diaryObj);
-    if(this.props.diarySaved){
+      ans5: this.state.diaryAnswers[4],
+    };
+    await this.props.saveDiaryAnswers(this.state.user._id, diaryObj);
+    if (this.props.diarySaved) {
       OCAlert.alertSuccess("Diary Updated Successfully :)", {
         timeOut: 3000,
       });
-    } else{
+    } else {
       OCAlert.alertWarning("Oops! Could not save the diary :)", {
         timeOut: 3000,
       });
@@ -272,7 +276,7 @@ class Dashboard extends Component {
         )}
       </div>
     );
-  }
+  };
 
   getFormBoxForMentalCalendar = () => {
     let todaysDate = new Date(
@@ -309,9 +313,9 @@ class Dashboard extends Component {
     ).isSameOrAfter(dateAfter7days, "days");
 
     if (isSelectedDateInPrev7Days) {
-      if(this.props.allAnswers || this.state.formStarted){
-         return this.getAnswersBox();
-      } else{
+      if (this.props.allAnswers || this.state.formStarted) {
+        return this.getAnswersBox();
+      } else {
         return (
           <div className="formBox">
             <div className="">
@@ -623,16 +627,16 @@ Dashboard.propTypes = {
   loadUser: PropTypes.func,
   getDiaryAnswers: PropTypes.func,
   saveDiaryAnswers: PropTypes.func,
-  getAllDiaryDates: PropTypes.func
+  getAllDiaryDates: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  userUpdated: (state.user.saved)?(state.user.saved):false,
-  allUsers: (state.user.users)?state.user.users:null,
-  allAnswers: (state.user.allAnswers)?state.user.allAnswers:null,
-  diarySaved: (state.user.diarySaved)?state.user.diarySaved:false,
-  allDates: (state.user.allDates)?state.user.allDates:null
+  userUpdated: state.user.saved ? state.user.saved : false,
+  allUsers: state.user.users ? state.user.users : null,
+  allAnswers: state.user.allAnswers ? state.user.allAnswers : null,
+  diarySaved: state.user.diarySaved ? state.user.diarySaved : false,
+  allDates: state.user.allDates ? state.user.allDates : null,
 });
 
 export default connect(mapStateToProps, {
@@ -642,5 +646,5 @@ export default connect(mapStateToProps, {
   getAllUsers,
   saveDiaryAnswers,
   getDiaryAnswers,
-  getAllDiaryDates
+  getAllDiaryDates,
 })(Dashboard);
