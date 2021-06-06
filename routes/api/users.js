@@ -98,10 +98,29 @@ router.post("/edit-image", auth, async (req, res) => {
           },
         }
       );
-      //destory previous image
       
       res.status(200).json({ msg: "Profile Image upadated successfully" });
     });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ errors: [{ msg: "Server error" }] });
+  }
+});
+
+// @route   POST api/users/update-diary
+// @desc    Updates Diary of user
+// @access  Private
+router.post("/update-diary", auth, async (req, res) => {
+  try {
+    await User.updateOne(
+      { _id: req.body.userId },
+      {
+        $set: {
+          "diary": req.body.diary,
+        },
+      }
+    );
+    res.status(200).json({ msg: "Diary saved successfully" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ errors: [{ msg: "Server error" }] });

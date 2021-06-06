@@ -259,7 +259,7 @@
   // End -  Custom CSS for Toggle button
 }
 
-/* Toggle button */
+/* Toggle button For Header*/
 
 @keyframes slideinToggleOptions {
   from {
@@ -272,24 +272,72 @@
   }
 }
 
-/* Diary Box */
+/*General Diary Box */
 .diary {
   height: 50vh;
   padding: 20px;
   border: 2px solid var(--theme-white);
   box-sizing: border-box;
   border-radius: 0px 40px 40px 40px;
+  .selected_date {
+    color: var(--theme-orange);
+    font-style: normal;
+    font-weight: bold;
+    font-size: 23px;
+    line-height: 30px;
+  }
+  .arrow_btns {
+    cursor: pointer;
+    font-size: 16px;
+  }
 }
-.diary .selected_date {
-  color: var(--theme-orange);
-  font-style: normal;
-  font-weight: bold;
-  font-size: 23px;
-  line-height: 30px;
-}
-.diary .arrow_btns {
-  cursor: pointer;
-  font-size: 16px;
+
+.questionsBox{
+  .diary{
+    height: auto;
+    .diaryQuestion{
+      text-align: left;
+      font-size: 22px;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 20px;
+      color: var(--theme-white);
+      margin-top: 5%;
+    }
+    .answersForm{
+      padding: 10px;
+      border: 2px solid var(--theme-orange);
+      border-radius: 20px;
+      textarea{
+        background: var(--theme-black);
+        color: var(--theme-white);
+        border: none;
+        width: 100%;
+        height: 15vh;
+        max-height: 15vh;
+        min-height: 15vh;
+        border: none;
+        outline: none;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        &:active{
+          border: none;
+        }
+        &:focus{
+          border: none;
+        }
+        &:focus-visible{
+          border: none;
+        }
+        &::-webkit-scrollbar {
+          display: none;
+        }
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    }
+  }
 }
 /* Header User Profile */
 .userProfile {
@@ -520,7 +568,7 @@
   }
 }
 
-// Update Image Section
+// Accounts Section
 .getAccounts {
   .formBox {
     .accountEditBtnSection {
@@ -579,20 +627,6 @@
   }
 }
 
-.dashboard {
-  .theme_calendar .react-calendar__tile.react-calendar__month-view__days__day {
-    margin: 0;
-  }
-  .theme_calendar
-    .react-calendar__tile.react-calendar__century-view__decades__decade,
-  .theme_calendar
-    .react-calendar__tile.react-calendar__decade-view__years__year,
-  .theme_calendar .react-calendar__tile.react-calendar__month-view__days__day,
-  .theme_calendar
-    .react-calendar__tile.react-calendar__year-view__months__month {
-    margin: 0;
-  }
-}
 /* ############################### MEDIA QUERIES ############################# */
 /* Mobile Media Query */
 @media only screen and (max-width: 767px) {

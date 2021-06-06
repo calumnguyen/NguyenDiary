@@ -157,3 +157,29 @@ export const updateUserImage = (userId, updatedImage) => async (dispatch) => {
     });
   }
 };
+
+//Save Diary Anwers
+export const saveDiaryAnswers = (userId, diaryAnsers, date) => async (dispatch) => {
+  dispatch({ type: USER_LOADING });
+  const config = {
+    headers: {
+      "content-type": "application/json",
+    },
+  };
+  try {
+    const res = await axios.post(`/api/users/update-diary`, {userId, diaryAnsers}, config);
+    dispatch({
+      type: USER_UPDATED,
+      payload: res.data,
+    });
+    // dispatch(setAlert(res.data.msg, "success"));
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+    }
+    dispatch({
+      type: USERS_ERROR,
+    });
+  }
+};

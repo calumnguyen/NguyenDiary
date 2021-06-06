@@ -7,7 +7,7 @@ import { Redirect } from "react-router-dom";
 import "./Dashboard.scss";
 import MyCalendar from "./MyCalendar";
 import { loadUser, logout } from "../../../actions/auth";
-import { getAllUsers, updateUserImage } from "../../../actions/user";
+import { getAllUsers, updateUserImage, saveDiaryAnswers } from "../../../actions/user";
 
 import MyLoader from "../../layout/MyLoader";
 import { OCAlertsProvider } from "@opuscapita/react-alerts";
@@ -17,8 +17,7 @@ import Alert from "../../layout/Alert";
 const DATE_FORMAT = "DD/MM/YYYY";
 const DATE_FORMAT_WITH_TIME = "h:mm A DD/MM/YYYY";
 
-export class Dashboard extends Component {
-  static propTypes = {};
+class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,6 +48,17 @@ export class Dashboard extends Component {
       isHeaderToggleClicked: false,
       selectedTab: "mentalcalendar",
       hiddenFileInputUpdateImage: React.createRef(),
+      diaryQuestions: [
+        "How am I feeling today?",
+        "What's been worrying me lately?",
+        "What did I do today for my body?",
+        "What am I doing to bring myself joy?",
+        "Who did I talk to today that I know that are in my support corner?",
+      ],
+      totalDiaryQuestions: 5,
+      answeredQuestions: 0,
+      formStarted: false,
+      diaryAnswers : ["","","","",""]
     };
   }
   async componentDidMount() {
@@ -80,7 +90,7 @@ export class Dashboard extends Component {
     updatedHeaderTabs.forEach((tab) => (tab.status = "inactive"));
     updatedHeaderTabs[idx].status = "active";
     let currentTab = updatedHeaderTabs[idx];
-    updatedHeaderTabs.splice(idx,1);
+    updatedHeaderTabs.splice(idx, 1);
     updatedHeaderTabs.unshift(currentTab);
 
     this.setState({
@@ -96,12 +106,40 @@ export class Dashboard extends Component {
     this.setState({ isHeaderToggleClicked: !this.state.isHeaderToggleClicked });
   };
 
+  takeToNextStep = () => {
+    if(this.state.diaryAnswers[this.state.answeredQuestions].length>25){
+      this.setState({answeredQuestions: this.state.answeredQuestions+1});
+    } else{
+      OCAlert.alertWarning("Please type in atleast 25 words to proceed further", {
+        timeOut: 3000,
+      });
+    }
+  }
+
+  finishQuestions = () => {
+    OCAlert.alertSuccess("You answered all the questions :)", {
+      timeOut: 3000,
+    });
+    //this.props.saveDiaryAnswers(this.state.user._id,this.state.diaryAnswers,this.selectedDate);
+  }
+  handleAnswerChange = (e) => {
+    let updatedDiaryAnswers = this.state.diaryAnswers;
+    updatedDiaryAnswers[this.state.answeredQuestions] = e.target.value;
+    this.setState({
+      diaryAnswers: updatedDiaryAnswers
+    })
+  }
   getFormBoxForMentalCalendar = () => {
     let todaysDate = new Date(
       moment().millisecond(0).seconds(0).second(0).minute(0).hour(0)
     );
     let selectedDate = new Date(
-      moment(this.state.selectedDate).millisecond(0).seconds(0).second(0).minute(0).hour(0)
+      moment(this.state.selectedDate)
+        .millisecond(0)
+        .seconds(0)
+        .second(0)
+        .minute(0)
+        .hour(0)
     );
 
     let dateAfter7days = new Date(moment(todaysDate).add(7, "days"));
@@ -123,15 +161,107 @@ export class Dashboard extends Component {
       this.state.selectedDate
     ).isSameOrAfter(dateAfter7days, "days");
 
-    if (isSelectedDateInPrev7Days) {
+    if (this.state.formStarted) {
+      return (
+        <div className="formBox">
+          <p className="diaryQuestion">{this.state.diaryQuestions[this.state.answeredQuestions]} </p>
+          <form className="answersForm mt-4">
+            {this.state.answeredQuestions === 0 ? (
+              <div className="form-group">
+                <textarea
+                  classname="form-control"
+                  name="question1"
+                  placeholder="Your answer goes here"
+                  value={this.state.diaryAnswers[this.state.answeredQuestions]}
+                  onChange={(e) => this.handleAnswerChange(e)}
+                />
+              </div>
+            ) : null}
+
+            {this.state.answeredQuestions === 1 ? (
+              <div className="form-group">
+                <textarea
+                  classname="form-control"
+                  name="question2"
+                  placeholder="Your answer goes here"
+                  value={this.state.diaryAnswers[this.state.answeredQuestions]}
+                  onChange={(e) => this.handleAnswerChange(e)}
+                />
+              </div>
+            ) : null}
+            {this.state.answeredQuestions === 2 ? (
+              <div className="form-group">
+                <textarea
+                  classname="form-control"
+                  name="question3"
+                  placeholder="Your answer goes here"
+                  value={this.state.diaryAnswers[this.state.answeredQuestions]}
+                  onChange={(e) => this.handleAnswerChange(e)}
+                />
+              </div>
+            ) : null}
+            {this.state.answeredQuestions == 3 ? (
+              <div className="form-group">
+                <textarea
+                  classname="form-control"
+                  name="question4"
+                  placeholder="Your answer goes here"
+                  value={this.state.diaryAnswers[this.state.answeredQuestions]}
+                  onChange={(e) => this.handleAnswerChange(e)}
+                />
+              </div>
+            ) : null}
+            {this.state.answeredQuestions == 4 ? (
+              <div className="form-group">
+                <textarea
+                  classname="form-control"
+                  name="question5"
+                  placeholder="Your answer goes here"
+                  value={this.state.diaryAnswers[this.state.answeredQuestions]}
+                  onChange={(e) => this.handleAnswerChange(e)}
+                />
+              </div>
+            ) : null}
+          </form>
+          <small class="form-text text-muted">
+            {this.state.answeredQuestions + 1}/{this.state.totalDiaryQuestions}
+          </small>
+          {
+            this.state.answeredQuestions > 0 ? 
+            <>
+              <button type="submit" className="btn startFormBtn mt-3 mr-2" onClick={()=> this.setState({answeredQuestions: this.state.answeredQuestions-1})}>
+                  Prev
+              </button>
+              {" "}
+            </>:null
+          }
+          {this.state.answeredQuestions < 4 ? (
+            <>
+              <button type="submit" className="btn startFormBtn mt-3" onClick={this.takeToNextStep}>
+                Next
+              </button>
+            </>
+          ) : (
+            <>
+              <button type="submit" className="btn startFormBtn mt-3" onClick={this.finishQuestions}>
+                Finish
+              </button>
+            </>
+          )}
+        </div>
+      );
+    } else if (isSelectedDateInPrev7Days) {
       return (
         <div className="formBox">
           <div className="">
-            <button className="btn startFormBtn">Start Form</button>
+            <button className="btn startFormBtn" onClick={()=>this.setState({formStarted: true})}>Start Form</button>
           </div>
           <p className="startFormMsg">
-            You have time until {" "}
-            {moment(selectedDate).add(7, "days").subtract(1,"minutes").format(DATE_FORMAT_WITH_TIME)}
+            You have time until{" "}
+            {moment(selectedDate)
+              .add(7, "days")
+              .subtract(1, "minutes")
+              .format(DATE_FORMAT_WITH_TIME)}
             .
           </p>
           {/* <p className="startFormMsg">
@@ -166,7 +296,7 @@ export class Dashboard extends Component {
   };
   getMentalCalendar = () => {
     return (
-      <div className="row customMargin p-3">
+      <div className="row customMargin p-3 questionsBox">
         <div className="col-sm-4">
           <MyCalendar
             selectedDate={this.state.selectedDate}
@@ -436,4 +566,5 @@ export default connect(mapStateToProps, {
   loadUser,
   updateUserImage,
   getAllUsers,
+  saveDiaryAnswers
 })(Dashboard);
