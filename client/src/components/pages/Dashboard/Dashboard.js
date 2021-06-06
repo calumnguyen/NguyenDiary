@@ -15,7 +15,7 @@ import { OCAlert } from "@opuscapita/react-alerts";
 import Alert from "../../layout/Alert";
 
 const DATE_FORMAT = "DD/MM/YYYY";
-
+const DATE_FORMAT_WITH_TIME = "h:mm A DD/MM/YYYY";
 export class Dashboard extends Component {
   static propTypes = {};
   constructor(props) {
@@ -90,6 +90,50 @@ export class Dashboard extends Component {
   toggleHeaderOptions = () => {
     this.setState({ isHeaderToggleClicked: !this.state.isHeaderToggleClicked });
   };
+  getFormBoxForMentalCalendar = () => {
+    let dateAfter7days = new Date(moment(new Date()).add(7,"days"));
+    let dateBefore7Days = new Date(moment(new Date()).subtract(7,"days"));
+    let isSelectedDateInPrev7Days = moment(this.state.selectedDate).isAfter(dateBefore7Days) && moment(this.state.selectedDate).isBefore(new Date());
+    let isSelectedDateInNext7Days = moment(this.state.selectedDate).isBefore(dateAfter7days) && moment(this.state.selectedDate).isAfter(new Date());
+    let isSelectedDateAfter7Days = moment(this.state.selectedDate).isAfter(dateAfter7days);
+    if(isSelectedDateInNext7Days || isSelectedDateInPrev7Days){
+      return (
+        <div className="formBox">
+          <div className="">
+            <button className="btn startFormBtn">Start Form</button>
+          </div>
+          <p className="startFormMsg">
+            You have time until 8:00pm{" "}
+            {moment(this.state.selectedDate).add(7, "days").format(DATE_FORMAT)}.
+          </p>
+        </div>
+      );
+    } else if(isSelectedDateAfter7Days){
+      return (
+        <div className="formBox">
+          <p className="startFormMsg">
+            Nothing here yet!{" "}
+          </p>
+          <p className="startFormMsg">
+            Come back at{" "}
+            <span className="text-theme-orange font-weight-bold">
+              {moment(dateAfter7days).format(DATE_FORMAT_WITH_TIME)}
+            </span>
+             {" "}to fill out! You will have <span className="text-theme-orange font-weight-bold">7 days</span> after that. 
+          </p>
+        </div>
+      );
+    } else{
+      return(
+        <div className="formBox">
+          <p className="startFormMsg">
+            You can't edit this now.
+          </p>
+        </div>
+      ); 
+    }
+    
+  };
   getMentalCalendar = () => {
     return (
       <div className="row customMargin p-3">
@@ -110,18 +154,7 @@ export class Dashboard extends Component {
                 <i className="fa fa-chevron-right ml-3"></i>
               </span>
             </p>
-            <div className="formBox">
-              <div className="">
-                <button className="btn startFormBtn">Start Form</button>
-              </div>
-              <p className="startFormMsg">
-                You have time until 8:00pm{" "}
-                {moment(this.state.selectedDate)
-                  .add(7, "days")
-                  .format(DATE_FORMAT)}
-                .
-              </p>
-            </div>
+            {this.getFormBoxForMentalCalendar()}
           </div>
         </div>
       </div>
@@ -316,12 +349,7 @@ export class Dashboard extends Component {
               <div className="row">
                 <div className="col-sm-12">
                   <div className="accountEditBtnSection">
-                    <button
-                      className="btn startFormBtn"
-                      onClick={this.uploadImage}
-                    >
-                      Edit
-                    </button>
+                    <button className="btn startFormBtn">Edit</button>
                   </div>
                 </div>
               </div>
