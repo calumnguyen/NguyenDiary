@@ -94,8 +94,8 @@
   .react-calendar__tile.react-calendar__tile--now {
     &.react-calendar__month-view__days__day,
     &.react-calendar__year-view__months__month,
-    &.react-calendar__decade-view__years__year
-      &.react-calendar__century-view__decades__decade {
+    &.react-calendar__decade-view__years__year,
+    &.react-calendar__century-view__decades__decade {
       background: var(--theme-black);
       border-color: var(--theme-orange);
       &:hover {
@@ -123,12 +123,12 @@
       }
     }
   }
-  
-  .react-calendar__tile.react-calendar__tile--active.react-calendar__month-view__days__day.react-calendar__month-view__days__day--weekend{
-    &:hover{
+
+  .react-calendar__tile.react-calendar__tile--active.react-calendar__month-view__days__day.react-calendar__month-view__days__day--weekend {
+    &:hover {
       border-color: var(--theme-orange);
     }
-    &:focus{
+    &:focus {
       border-color: var(--theme-orange);
     }
   }
@@ -153,15 +153,15 @@
   .react-calendar__navigation__arrow {
     color: white;
     font-size: 20px;
-    &:hover{
+    &:hover {
       border: none;
     }
-    &:focus{
+    &:focus {
       border: none;
     }
   }
   .react-calendar__navigation__arrow button:enabled:hover,
-  .react-calendar__navigation__arrow button:enabled:hover{
+  .react-calendar__navigation__arrow button:enabled:hover {
     border: none;
   }
   .react-calendar__navigation button[disabled] {
