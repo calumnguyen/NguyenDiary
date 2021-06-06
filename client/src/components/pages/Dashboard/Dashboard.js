@@ -82,13 +82,13 @@ export class Dashboard extends Component {
     let currentTab = updatedHeaderTabs[idx];
     updatedHeaderTabs.splice(idx,1);
     updatedHeaderTabs.unshift(currentTab);
-    
+
     this.setState({
       headerTabs: updatedHeaderTabs,
       isHeaderToggleClicked: !this.state.isHeaderToggleClicked,
-      selectedTab: updatedHeaderTabs[idx].slug,
+      selectedTab: currentTab.slug,
     });
-    if (updatedHeaderTabs[idx].slug === "logout") {
+    if (currentTab.slug === "logout") {
       this.handleLogOutRequest();
     }
   };

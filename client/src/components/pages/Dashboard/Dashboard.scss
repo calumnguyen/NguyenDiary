@@ -308,6 +308,7 @@
   position: absolute;
   top: 0;
   border-radius: 20px;
+  z-index: 1;
 }
 .dashboard .headerDesc .list-group .list-group-item {
   background: var(--theme-black);
