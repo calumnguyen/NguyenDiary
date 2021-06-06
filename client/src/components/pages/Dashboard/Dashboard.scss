@@ -6,7 +6,7 @@
   color: var(--theme-white);
   padding: 20px;
   padding-top: 40px;
-  
+
   .react-calendar {
     border: none;
     background: var(--theme-black);
@@ -46,19 +46,26 @@
     border: 2px solid var(--theme-black);
     border-radius: 5px;
     color: var(--theme-white);
-    &:hover{
+    &:hover {
       background: #eb5d0b2c;
     }
+    &:focus {
+      border-color: var(--theme-orange);
+      background: var(--theme-orange);
+    }
   }
-
   // Override for General day,month,year,decade Tile specifically
   .react-calendar__tile.react-calendar__month-view__days__day,
   .react-calendar__tile.react-calendar__year-view__months__month,
   .react-calendar__tile.react-calendar__decade-view__years__year,
   .react-calendar__tile.react-calendar__century-view__decades__decade {
     color: var(--theme-white);
-    &:hover{
+    &:hover {
       background: #eb5d0b2c;
+    }
+    &:focus {
+      border-color: var(--theme-orange);
+      background: var(--theme-orange);
     }
   }
 
@@ -70,52 +77,53 @@
   }
 
   //For Currently selected Date, Month, Year, Decade
-  .react-calendar__tile.react-calendar__tile--hasActive{
+  .react-calendar__tile.react-calendar__tile--hasActive {
     &.react-calendar__month-view__days__day,
     &.react-calendar__year-view__months__month,
     &.react-calendar__decade-view__years__year,
-    &.react-calendar__century-view__decades__decade{
+    &.react-calendar__century-view__decades__decade {
       border-color: var(--theme-orange);
       background: var(--theme-orange);
-      &:hover{
+      &:hover {
         background: var(--theme-orange);
       }
     }
   }
 
   //Today's Date, Month, Year, and Decade
-  .react-calendar__tile.react-calendar__tile--now{
+  .react-calendar__tile.react-calendar__tile--now {
     &.react-calendar__month-view__days__day,
     &.react-calendar__year-view__months__month,
     &.react-calendar__decade-view__years__year
-    &.react-calendar__century-view__decades__decade{
+      &.react-calendar__century-view__decades__decade {
       background: var(--theme-black);
       border-color: var(--theme-orange);
-      &:hover{
+      &:hover {
         background: #eb5d0b2c;
       }
     }
   }
 
   /* For Both Active(Selected) and Now(Today) for Days*/
-  .react-calendar__tile.react-calendar__tile--now.react-calendar__tile--active{
+  .react-calendar__tile.react-calendar__tile--now.react-calendar__tile--active {
     background: var(--theme-orange);
-    &:hover{
+    &:hover {
       background: var(--theme-orange);
     }
   }
 
   /* For Both Active(Selected) and Now(Today) for Month,Year,Decades*/
-  .react-calendar__tile.react-calendar__tile--now.react-calendar__tile--hasActive{
+  .react-calendar__tile.react-calendar__tile--now.react-calendar__tile--hasActive {
     &.react-calendar__year-view__months__month,
     &.react-calendar__decade-view__years__year,
-    &.react-calendar__century-view__decades__decade{
+    &.react-calendar__century-view__decades__decade {
       background: var(--theme-orange);
-      &:hover{
+      &:hover {
         background: var(--theme-orange);
       }
     }
   }
+  
 
   // Weekdays name
   abbr[data-original-title],
@@ -152,13 +160,13 @@
   .calendar_toggle.wrapper {
     background: AliceBlue;
   }
-  
+
   .input-toggler:checked ~ .sidebar {
     opacity: 0.9;
     transform: translateX(0);
     background-position: 0 0;
   }
-  
+
   .menu-toggler {
     display: block;
     width: var(--toggler-size);
@@ -168,7 +176,7 @@
     right: 15px;
     z-index: 1;
   }
-  
+
   .menu-toggler__line {
     height: calc(var(--toggler-size) / 10);
     background: Tomato;
@@ -183,37 +191,37 @@
     animation-iteration-count: 1;
     animation-timing-function: ease-out;
   }
-  
+
   .input-toggler:checked ~ .menu-toggler .menu-toggler__line {
     transition-delay: 0.25s, 0s;
   }
-  
+
   .menu-toggler__line:nth-child(2) {
     top: calc(var(--toggler-size) / 5 * 2);
     animation-duration: 0.6s;
   }
-  
+
   .menu-toggler__line:nth-child(3) {
     top: calc(var(--toggler-size) / 5 * 4);
     animation-duration: 0.7s;
   }
-  
+
   .input-toggler {
     display: none;
   }
-  
+
   .input-toggler:checked ~ .menu-toggler .menu-toggler__line {
     background: var(--theme-orange);
   }
-  
+
   .input-toggler:checked ~ .menu-toggler .menu-toggler__line:nth-child(1) {
     transform: translateY(calc(var(--toggler-size) / 5 * 2)) rotate(45deg);
   }
-  
+
   .input-toggler:checked ~ .menu-toggler .menu-toggler__line:nth-child(2) {
     opacity: 0;
   }
-  
+
   .input-toggler:checked ~ .menu-toggler .menu-toggler__line:nth-child(3) {
     transform: translateY(calc(var(--toggler-size) / 5 * -2)) rotate(-45deg);
   }
