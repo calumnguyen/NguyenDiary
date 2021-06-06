@@ -124,6 +124,14 @@
     }
   }
   
+  .react-calendar__tile.react-calendar__tile--active.react-calendar__month-view__days__day.react-calendar__month-view__days__day--weekend{
+    &:hover{
+      border-color: var(--theme-orange);
+    }
+    &:focus{
+      border-color: var(--theme-orange);
+    }
+  }
 
   // Weekdays name
   abbr[data-original-title],
@@ -136,6 +144,7 @@
   .react-calendar__navigation button:enabled:hover,
   .react-calendar__navigation button:enabled:focus {
     background: none;
+    border: none;
   }
 
   .react-calendar__navigation__label {
@@ -144,13 +153,25 @@
   .react-calendar__navigation__arrow {
     color: white;
     font-size: 20px;
+    &:hover{
+      border: none;
+    }
+    &:focus{
+      border: none;
+    }
+  }
+  .react-calendar__navigation__arrow button:enabled:hover,
+  .react-calendar__navigation__arrow button:enabled:hover{
+    border: none;
   }
   .react-calendar__navigation button[disabled] {
     background: none;
+    border: none;
   }
   .react-calendar__navigation button:enabled:hover,
   .react-calendar__navigation button:enabled:focus {
     background: none;
+    border: none;
   }
   // End Navigation arrows
 
