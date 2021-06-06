@@ -7,7 +7,13 @@ import { Redirect } from "react-router-dom";
 import "./Dashboard.scss";
 import MyCalendar from "./MyCalendar";
 import { loadUser, logout } from "../../../actions/auth";
-import { getAllUsers, updateUserImage, saveDiaryAnswers } from "../../../actions/user";
+import {
+  getAllUsers,
+  updateUserImage,
+  saveDiaryAnswers,
+  getDiaryAnswers,
+  getAllDiaryDates
+} from "../../../actions/user";
 
 import MyLoader from "../../layout/MyLoader";
 import { OCAlertsProvider } from "@opuscapita/react-alerts";
@@ -58,19 +64,33 @@ class Dashboard extends Component {
       totalDiaryQuestions: 5,
       answeredQuestions: 0,
       formStarted: false,
-      diaryAnswers : ["","","","",""]
+      diaryAnswers: ["", "", "", "", ""],
     };
   }
   async componentDidMount() {
-    this.props.getAllUsers();
     await this.props.loadUser();
     if (this.props.auth && this.props.auth.user) {
       this.setState({ user: this.props.auth.user });
+      this.props.getAllDiaryDates(this.props.auth.user._id);
     }
   }
 
-  handleDateChange = (changedDate) => {
-    this.setState({ selectedDate: changedDate });
+  handleDateChange = async (changedDate) => {
+    this.setState({ selectedDate: changedDate , formStarted : false, answeredQuestions: 0});
+    let myDate = moment(changedDate).format("DD-MM-YYYY");
+    await this.props.getDiaryAnswers(this.state.user._id, myDate);
+    if (this.props.allAnswers) {
+      let newDiaryAnswers = [
+        this.props.allAnswers.diary[0].ans1,
+        this.props.allAnswers.diary[0].ans2,
+        this.props.allAnswers.diary[0].ans3,
+        this.props.allAnswers.diary[0].ans4,
+        this.props.allAnswers.diary[0].ans5,
+      ];
+      this.setState({ diaryAnswers: newDiaryAnswers });
+    } else {
+      this.setState({ diaryAnswers: ["", "", "", "", ""] });
+    }
   };
   handleLogOutRequest = () => {
     this.props.logout();
@@ -107,28 +127,153 @@ class Dashboard extends Component {
   };
 
   takeToNextStep = () => {
-    if(this.state.diaryAnswers[this.state.answeredQuestions].length>25){
-      this.setState({answeredQuestions: this.state.answeredQuestions+1});
+    if (this.state.diaryAnswers[this.state.answeredQuestions].length > 25) {
+      this.setState({ answeredQuestions: this.state.answeredQuestions + 1 });
+    } else {
+      OCAlert.alertWarning(
+        "Please type in atleast 25 words to proceed further",
+        {
+          timeOut: 3000,
+        }
+      );
+    }
+  };
+
+  finishQuestions = async () => {
+    let myDate = moment(this.state.selectedDate).format("DD-MM-YYYY");
+    let diaryObj = {
+      day: myDate,
+      ans1: this.state.diaryAnswers[0],
+      ans2: this.state.diaryAnswers[1],
+      ans3: this.state.diaryAnswers[2],
+      ans4: this.state.diaryAnswers[3],
+      ans5: this.state.diaryAnswers[4]
+    }
+    await this.props.saveDiaryAnswers(this.state.user._id,diaryObj);
+    if(this.props.diarySaved){
+      OCAlert.alertSuccess("Diary Updated Successfully :)", {
+        timeOut: 3000,
+      });
     } else{
-      OCAlert.alertWarning("Please type in atleast 25 words to proceed further", {
+      OCAlert.alertWarning("Oops! Could not save the diary :)", {
         timeOut: 3000,
       });
     }
-  }
-
-  finishQuestions = () => {
-    OCAlert.alertSuccess("You answered all the questions :)", {
-      timeOut: 3000,
-    });
-    //this.props.saveDiaryAnswers(this.state.user._id,this.state.diaryAnswers,this.selectedDate);
-  }
+  };
   handleAnswerChange = (e) => {
     let updatedDiaryAnswers = this.state.diaryAnswers;
     updatedDiaryAnswers[this.state.answeredQuestions] = e.target.value;
     this.setState({
-      diaryAnswers: updatedDiaryAnswers
-    })
+      diaryAnswers: updatedDiaryAnswers,
+    });
+  };
+  getAnswersBox = () => {
+    return (
+      <div className="formBox">
+        <p className="diaryQuestion">
+          {this.state.diaryQuestions[this.state.answeredQuestions]}{" "}
+        </p>
+        <form className="answersForm mt-4">
+          {this.state.answeredQuestions === 0 ? (
+            <div className="form-group">
+              <textarea
+                className="form-control"
+                name="question1"
+                placeholder="Your answer goes here"
+                value={this.state.diaryAnswers[this.state.answeredQuestions]}
+                onChange={(e) => this.handleAnswerChange(e)}
+              />
+            </div>
+          ) : null}
+
+          {this.state.answeredQuestions === 1 ? (
+            <div className="form-group">
+              <textarea
+                className="form-control"
+                name="question2"
+                placeholder="Your answer goes here"
+                value={this.state.diaryAnswers[this.state.answeredQuestions]}
+                onChange={(e) => this.handleAnswerChange(e)}
+              />
+            </div>
+          ) : null}
+          {this.state.answeredQuestions === 2 ? (
+            <div className="form-group">
+              <textarea
+                className="form-control"
+                name="question3"
+                placeholder="Your answer goes here"
+                value={this.state.diaryAnswers[this.state.answeredQuestions]}
+                onChange={(e) => this.handleAnswerChange(e)}
+              />
+            </div>
+          ) : null}
+          {this.state.answeredQuestions == 3 ? (
+            <div className="form-group">
+              <textarea
+                className="form-control"
+                name="question4"
+                placeholder="Your answer goes here"
+                value={this.state.diaryAnswers[this.state.answeredQuestions]}
+                onChange={(e) => this.handleAnswerChange(e)}
+              />
+            </div>
+          ) : null}
+          {this.state.answeredQuestions == 4 ? (
+            <div className="form-group">
+              <textarea
+                className="form-control"
+                name="question5"
+                placeholder="Your answer goes here"
+                value={this.state.diaryAnswers[this.state.answeredQuestions]}
+                onChange={(e) => this.handleAnswerChange(e)}
+              />
+            </div>
+          ) : null}
+        </form>
+        <p className="form-text status">
+          {this.state.answeredQuestions + 1}/{this.state.totalDiaryQuestions}
+        </p>
+        {this.state.answeredQuestions > 0 ? (
+          <>
+            <button
+              type="submit"
+              className="btn startFormBtn mt-3 mr-2"
+              onClick={() =>
+                this.setState({
+                  answeredQuestions: this.state.answeredQuestions - 1,
+                })
+              }
+            >
+              Prev
+            </button>{" "}
+          </>
+        ) : null}
+        {this.state.answeredQuestions < 4 ? (
+          <>
+            <button
+              type="submit"
+              className="btn startFormBtn mt-3"
+              onClick={this.takeToNextStep}
+            >
+              Next
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              type="submit"
+              className="btn startFormBtn mt-3"
+              onClick={this.finishQuestions}
+            >
+              Finish
+            </button>
+          </>
+        )}
+      </div>
+    );
   }
+
   getFormBoxForMentalCalendar = () => {
     let todaysDate = new Date(
       moment().millisecond(0).seconds(0).second(0).minute(0).hour(0)
@@ -151,6 +296,8 @@ class Dashboard extends Component {
     // let secDiff = moment(dateAfter7days).diff(selectedDate,"seconds");
     // console.log(dayDiff, hourDiff, minDiff, secDiff)
 
+    //isSelectedDateInPrev7Days : this is valid date in which users can edit
+
     let isSelectedDateInPrev7Days =
       moment(this.state.selectedDate).isAfter(dateBefore7Days) &&
       moment(this.state.selectedDate).isSameOrBefore(todaysDate, "days");
@@ -161,116 +308,36 @@ class Dashboard extends Component {
       this.state.selectedDate
     ).isSameOrAfter(dateAfter7days, "days");
 
-    if (this.state.formStarted) {
-      return (
-        <div className="formBox">
-          <p className="diaryQuestion">{this.state.diaryQuestions[this.state.answeredQuestions]} </p>
-          <form className="answersForm mt-4">
-            {this.state.answeredQuestions === 0 ? (
-              <div className="form-group">
-                <textarea
-                  classname="form-control"
-                  name="question1"
-                  placeholder="Your answer goes here"
-                  value={this.state.diaryAnswers[this.state.answeredQuestions]}
-                  onChange={(e) => this.handleAnswerChange(e)}
-                />
-              </div>
-            ) : null}
-
-            {this.state.answeredQuestions === 1 ? (
-              <div className="form-group">
-                <textarea
-                  classname="form-control"
-                  name="question2"
-                  placeholder="Your answer goes here"
-                  value={this.state.diaryAnswers[this.state.answeredQuestions]}
-                  onChange={(e) => this.handleAnswerChange(e)}
-                />
-              </div>
-            ) : null}
-            {this.state.answeredQuestions === 2 ? (
-              <div className="form-group">
-                <textarea
-                  classname="form-control"
-                  name="question3"
-                  placeholder="Your answer goes here"
-                  value={this.state.diaryAnswers[this.state.answeredQuestions]}
-                  onChange={(e) => this.handleAnswerChange(e)}
-                />
-              </div>
-            ) : null}
-            {this.state.answeredQuestions == 3 ? (
-              <div className="form-group">
-                <textarea
-                  classname="form-control"
-                  name="question4"
-                  placeholder="Your answer goes here"
-                  value={this.state.diaryAnswers[this.state.answeredQuestions]}
-                  onChange={(e) => this.handleAnswerChange(e)}
-                />
-              </div>
-            ) : null}
-            {this.state.answeredQuestions == 4 ? (
-              <div className="form-group">
-                <textarea
-                  classname="form-control"
-                  name="question5"
-                  placeholder="Your answer goes here"
-                  value={this.state.diaryAnswers[this.state.answeredQuestions]}
-                  onChange={(e) => this.handleAnswerChange(e)}
-                />
-              </div>
-            ) : null}
-          </form>
-          <small class="form-text text-muted">
-            {this.state.answeredQuestions + 1}/{this.state.totalDiaryQuestions}
-          </small>
-          {
-            this.state.answeredQuestions > 0 ? 
-            <>
-              <button type="submit" className="btn startFormBtn mt-3 mr-2" onClick={()=> this.setState({answeredQuestions: this.state.answeredQuestions-1})}>
-                  Prev
+    if (isSelectedDateInPrev7Days) {
+      if(this.props.allAnswers || this.state.formStarted){
+         return this.getAnswersBox();
+      } else{
+        return (
+          <div className="formBox">
+            <div className="">
+              <button
+                className="btn startFormBtn"
+                onClick={() => this.setState({ formStarted: true })}
+              >
+                Start Form
               </button>
-              {" "}
-            </>:null
-          }
-          {this.state.answeredQuestions < 4 ? (
-            <>
-              <button type="submit" className="btn startFormBtn mt-3" onClick={this.takeToNextStep}>
-                Next
-              </button>
-            </>
-          ) : (
-            <>
-              <button type="submit" className="btn startFormBtn mt-3" onClick={this.finishQuestions}>
-                Finish
-              </button>
-            </>
-          )}
-        </div>
-      );
-    } else if (isSelectedDateInPrev7Days) {
-      return (
-        <div className="formBox">
-          <div className="">
-            <button className="btn startFormBtn" onClick={()=>this.setState({formStarted: true})}>Start Form</button>
+            </div>
+            <p className="startFormMsg">
+              You have time until{" "}
+              {moment(selectedDate)
+                .add(7, "days")
+                .subtract(1, "minutes")
+                .format(DATE_FORMAT_WITH_TIME)}
+              .
+            </p>
+            {/* <p className="startFormMsg">
+              There is {" "}
+              {`${dayDiff} days, ${hourDiff} hours, ${minDiff} minutes, ${secDiff} seconds`}
+              {" "} left
+            </p> */}
           </div>
-          <p className="startFormMsg">
-            You have time until{" "}
-            {moment(selectedDate)
-              .add(7, "days")
-              .subtract(1, "minutes")
-              .format(DATE_FORMAT_WITH_TIME)}
-            .
-          </p>
-          {/* <p className="startFormMsg">
-            There is {" "}
-            {`${dayDiff} days, ${hourDiff} hours, ${minDiff} minutes, ${secDiff} seconds`}
-            {" "} left
-          </p> */}
-        </div>
-      );
+        );
+      }
     } else if (isSelectedDateAfter7Days || isSelectedDateInNext7Days) {
       return (
         <div className="formBox">
@@ -301,6 +368,7 @@ class Dashboard extends Component {
           <MyCalendar
             selectedDate={this.state.selectedDate}
             handleDateChange={this.handleDateChange}
+            allDates={this.props.allDates}
           />
         </div>
         <div className="col-sm-8">
@@ -553,12 +621,18 @@ Dashboard.propTypes = {
   logout: PropTypes.func,
   auth: PropTypes.object,
   loadUser: PropTypes.func,
+  getDiaryAnswers: PropTypes.func,
+  saveDiaryAnswers: PropTypes.func,
+  getAllDiaryDates: PropTypes.func
 };
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  userUpdated: state.user.saved,
-  allUsers: state.user.users,
+  userUpdated: (state.user.saved)?(state.user.saved):false,
+  allUsers: (state.user.users)?state.user.users:null,
+  allAnswers: (state.user.allAnswers)?state.user.allAnswers:null,
+  diarySaved: (state.user.diarySaved)?state.user.diarySaved:false,
+  allDates: (state.user.allDates)?state.user.allDates:null
 });
 
 export default connect(mapStateToProps, {
@@ -566,5 +640,7 @@ export default connect(mapStateToProps, {
   loadUser,
   updateUserImage,
   getAllUsers,
-  saveDiaryAnswers
+  saveDiaryAnswers,
+  getDiaryAnswers,
+  getAllDiaryDates
 })(Dashboard);

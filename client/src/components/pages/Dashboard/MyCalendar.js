@@ -1,28 +1,65 @@
 import react, { Component, useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import moment from "moment";
 
 function MyCalendar(props) {
   const [selectedDate, onDateChange] = useState(props.selectedDate);
+
+  let datesHavingEntry = props.allDates
+    ? props.allDates.diary.map((day) => day.day)
+    : null;
+  console.log(datesHavingEntry);
+
   const formatDate = (date, format) => {
-    let daynumber = (new Date(date)).getDay();
-    switch(daynumber){
-      case 0: return 'Su';
-      case 6: return 'Sa';
-      case 5: return 'F';
-      case 4: return 'Th';
-      case 3: return 'W';
-      case 2: return 'T';
-      case 1: return 'M';
+    let daynumber = new Date(date).getDay();
+    switch (daynumber) {
+      case 0:
+        return "Su";
+      case 6:
+        return "Sa";
+      case 5:
+        return "F";
+      case 4:
+        return "Th";
+      case 3:
+        return "W";
+      case 2:
+        return "T";
+      case 1:
+        return "M";
     }
     return 1;
-  }
+  };
   useEffect(() => {
     props.handleDateChange(selectedDate);
   }, [selectedDate]);
   useEffect(() => {
     onDateChange(props.selectedDate);
   }, [props.selectedDate]);
+
+  let todaysDate = new Date(
+    moment().millisecond(0).seconds(0).second(0).minute(0).hour(0)
+  );
+  const prev7DaysDate = moment(todaysDate).subtract(7, "days");
+  const selectClassesForTile = ({ activeStartDate, date, view }) => {
+    const newDate = moment(date).format("DD-MM-YYYY");
+    if (
+      datesHavingEntry &&
+      datesHavingEntry.includes(newDate) &&
+      moment(date).isSameOrBefore(todaysDate, "days")
+    ) {
+      return "react-calendar_single_whiteBorder_tile";
+    } else if (
+      datesHavingEntry &&
+      !datesHavingEntry.includes(newDate) &&
+      moment(date).isAfter(prev7DaysDate, "days") &&
+      moment(date).isBefore(todaysDate, "days")
+    ) {
+      return "react-calendar_single_dotted_tile";
+    }
+  };
+
   return (
     <div className="theme_calendar">
       <div className="calendar_header">
@@ -51,6 +88,7 @@ function MyCalendar(props) {
         value={selectedDate}
         showNeighboringMonth={false}
         className={["theme-calendar"]}
+        tileClassName={selectClassesForTile}
         // formatShortWeekday={(locale, date) => formatDate(date, 'dd')}
       />
     </div>

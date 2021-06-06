@@ -22,7 +22,7 @@ cloudinary.config({
 // @access  Public
 router.get("/", async (req, res) => {
   try {
-    const allUsers = await User.find();
+    const allUsers = await User.find({},{"information":1});
     res.status(200).json({ msg: "success", allUsers });
   } catch (err) {
     console.log(err);
@@ -108,19 +108,89 @@ router.post("/edit-image", auth, async (req, res) => {
 });
 
 // @route   POST api/users/update-diary
-// @desc    Updates Diary of user
+// @desc    Updates or Inserts Answers for the given day
 // @access  Private
 router.post("/update-diary", auth, async (req, res) => {
   try {
-    await User.updateOne(
-      { _id: req.body.userId },
+    const userId = req.body.userId;
+    const day = req.body.day;
+    const ans1 = req.body.ans1;
+    const ans2 = req.body.ans2;
+    const ans3 = req.body.ans3;
+    const ans4 = req.body.ans4;
+    const ans5 = req.body.ans5;
+    
+    //check if the diary for given date exists
+    let ifDateExists = await User.findOne({_id: userId, "diary.day": day},{"_id":1});
+    if(ifDateExists){
+      await User.updateOne(
+        { _id: userId , "diary.day": day },
+        {
+          $set: {
+            "diary.$.ans1": ans1,
+            "diary.$.ans2": ans2,
+            "diary.$.ans3": ans3,
+            "diary.$.ans4": ans4,
+            "diary.$.ans5": ans5,
+          },
+        }
+      );
+    } else{
+      let diaryObj = {day,ans1,ans2,ans3,ans4,ans5};
+      await User.update({_id: userId},{
+        $push: {diary: diaryObj}
+      })
+    }
+    res.status(200).json({ msg: "Diary saved successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ errors: [{ msg: "Server error" }] });
+  }
+});
+
+// @route   Get api/users/get-diary/:day
+// @desc    Get answers for the given day
+// @access  Private
+router.get("/get-diary/:userId/:day", auth, async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const day = req.params.day;
+    //check if the diary for given date exists
+    let ifDateExists = await User.findOne({_id: userId, "diary.day": day},{"_id":1});
+    let allAnswers = null;
+    if(ifDateExists){
+      allAnswers = await User.findOne(
+        { _id: userId , "diary.day": day },
+        {
+          _id:0,
+          diary: {$elemMatch: {day: day}}
+        }
+      );
+      res.status(200).json({allAnswers, msg: "answers fetched successfully"});
+    } else{
+      res.status(200).json({allAnswers, msg: "Given day does not exists" });
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ errors: [{ msg: "Server error" }] });
+  }
+});
+
+// @route   Get api/users/get-diary-dates/:userId
+// @desc    Get exisiting diary dates for the given userId
+// @access  Private
+router.get("/get-diary-dates/:userId", auth, async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    let allDates = null;
+    allDates = await User.findOne(
+      { _id: userId },
       {
-        $set: {
-          "diary": req.body.diary,
-        },
+        _id:0,
+        "diary.day": 1
       }
     );
-    res.status(200).json({ msg: "Diary saved successfully" });
+    res.status(200).json({allDates, msg: "dates fetched successfully"});
   } catch (err) {
     console.log(err);
     res.status(500).json({ errors: [{ msg: "Server error" }] });

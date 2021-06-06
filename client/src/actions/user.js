@@ -9,12 +9,9 @@ import {
   USERS_LOADING,
   USER_DELETED,
   USER_UPDATED,
-  PASSWORD_ERROR,
-  PASSWORD_UPDATED,
-  CODE_VERIFIED,
-  VERIFCATION_ERROR,
-  PASSWORD_CONFIRMATION,
-  GET_ASSIGNED_ARTICLES,
+  DIARY_UPDATED,
+  GET_DIARY_ANSWERS,
+  GET_ALL_DIARY_DATES
 } from "./types";
 import { setAlert } from "./alert";
 
@@ -158,8 +155,35 @@ export const updateUserImage = (userId, updatedImage) => async (dispatch) => {
   }
 };
 
-//Save Diary Anwers
-export const saveDiaryAnswers = (userId, diaryAnsers, date) => async (dispatch) => {
+//Save Diary Answers
+export const saveDiaryAnswers = (userId, diaryObj) => async (dispatch) => {
+  dispatch({ type: USER_LOADING });
+  const config = {
+    headers: {
+      "content-type": "application/json",
+    },
+  };
+  // Dairy obj should have day, ans1, ans2, ans3, ans4, ans5
+  try {
+    const res = await axios.post(`/api/users/update-diary`, {userId, ...diaryObj}, config);
+    dispatch({
+      type: DIARY_UPDATED,
+      payload: res.data,
+    });
+    // dispatch(setAlert(res.data.msg, "success"));
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+    }
+    dispatch({
+      type: USERS_ERROR,
+    });
+  }
+};
+
+//Get Diary Answers by given day
+export const getDiaryAnswers = (userId, day) => async (dispatch) => {
   dispatch({ type: USER_LOADING });
   const config = {
     headers: {
@@ -167,9 +191,36 @@ export const saveDiaryAnswers = (userId, diaryAnsers, date) => async (dispatch) 
     },
   };
   try {
-    const res = await axios.post(`/api/users/update-diary`, {userId, diaryAnsers}, config);
+    const res = await axios.get(`/api/users/get-diary/${userId}/${day}`, config);
     dispatch({
-      type: USER_UPDATED,
+      type: GET_DIARY_ANSWERS,
+      payload: res.data,
+    });
+    // dispatch(setAlert(res.data.msg, "success"));
+  } catch (err) {
+    const errors = err.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, "danger")));
+    }
+    dispatch({
+      type: USERS_ERROR,
+    });
+  }
+};
+
+
+//Get All diary dates for a given UserId
+export const getAllDiaryDates = (userId) => async (dispatch) => {
+  dispatch({ type: USER_LOADING });
+  const config = {
+    headers: {
+      "content-type": "application/json",
+    },
+  };
+  try {
+    const res = await axios.get(`/api/users/get-diary-dates/${userId}`, config);
+    dispatch({
+      type: GET_ALL_DIARY_DATES,
       payload: res.data,
     });
     // dispatch(setAlert(res.data.msg, "success"));

@@ -6,10 +6,13 @@ import {
   USER_UPDATED,
   USER_SAVED,
   GET_USERS,
+  GET_DIARY_ANSWERS,
+  DIARY_UPDATED,
   PASSWORD_ERROR,
   PASSWORD_UPDATED,
   VERIFCATION_ERROR,
   PASSWORD_CONFIRMATION,
+  GET_ALL_DIARY_DATES
 } from "../actions/types";
 
 const initialState = {
@@ -51,7 +54,20 @@ export default function (state = initialState, action) {
         saved: false,
         passwordUpdated: false,
       };
-
+    case GET_DIARY_ANSWERS:
+      return {
+        ...state,
+        ...payload,
+        loading: false,
+        saved: false,
+      };
+    case GET_ALL_DIARY_DATES:
+      return {
+        ...state,
+        ...payload,
+        loading: false,
+        saved: false,
+      };
     case USER_SAVED:
       return {
         ...state,
@@ -66,9 +82,7 @@ export default function (state = initialState, action) {
         error: payload,
         loading: false,
         saved: false,
-        codeverified: false,
-        passwordUpdated: false,
-        passwordConfirmed: false,
+        diarySaved: false,
       };
 
     case USER_UPDATED:
@@ -78,6 +92,12 @@ export default function (state = initialState, action) {
         loading: false,
         // passwordUpdated: true,
         saved: true,
+      };
+    case DIARY_UPDATED:
+      return {
+        ...state,
+        loading: false,
+        diarySaved: true,
       };
     case USER_DELETED:
       return {

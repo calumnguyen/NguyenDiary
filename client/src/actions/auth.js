@@ -79,5 +79,6 @@ export const login = (values) => async (dispatch) => {
 
 // Logout / clear profile
 export const logout = () => (dispatch) => {
+  //take the same DID and pass it to Server and take response from there
   dispatch({ type: LOGOUT })
 }
