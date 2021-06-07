@@ -51,15 +51,14 @@ export class Home extends PureComponent {
   allProfiles = () => {
     let profiles = [];
     if (this.state.allUsers && this.state.allUsers.length > 0) {
-      profiles = this.state.allUsers.map((profile,idx) => {
+      profiles = this.state.allUsers.map((profile, idx) => {
         return (
-          <div className="col-sm-3" key={idx}>
-            <ProfileCard
-              key={profile.information.username}
-              profile={profile}
-              handleSignInRequest={this.handleSignInRequest}
-            />
-          </div>
+          <ProfileCard
+            key={profile.information.username}
+            profile={profile}
+            handleSignInRequest={this.handleSignInRequest}
+            key={idx}
+          />
         );
       });
     }
@@ -70,22 +69,15 @@ export class Home extends PureComponent {
     return (
       <>
         <MyLoader />
-        {/* <Alert /> */}
         <OCAlertsProvider />
-        {
-          (this.props.isAuthenticated) && <Redirect to="/dashboard"/>
-        }
+        {this.props.isAuthenticated && <Redirect to="/dashboard" />}
         <section className="home">
-          <div className="container">
-            <div className="col-sm-12">
-              <div className="intro">
-                <h3>Log In</h3>
-                <p>
-                  Choose your profile, and we will send you an email to login
-                </p>
-              </div>
-              <div className="row profiles">{this.allProfiles()}</div>
+          <div className="container-fluid">
+            <div className="introDesc">
+              <h3>Log In</h3>
+              <p>Choose your profile, and we will send you an email to login</p>
             </div>
+            <div className="d-flex profiles">{this.allProfiles()}</div>
           </div>
         </section>
       </>
@@ -96,7 +88,7 @@ export class Home extends PureComponent {
 Home.propTypes = {
   getAllUsers: PropTypes.func,
   loadUser: PropTypes.func,
-  login: PropTypes.func
+  login: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({

@@ -11,16 +11,18 @@ class Accounts extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        isFullNameChange: false,
-        isTaglineChange: false,
-    }
+      isFullNameChange: false,
+      isTaglineChange: false,
+    };
   }
-  componentDidMount() {}
+  componentDidMount() {
+
+  }
 
   render() {
     return (
       <div className="row customMargin p-3 getAccounts">
-        <div className="col-sm-2">
+        <div className="col-sm-2 profileThumbnailImg">
           {this.props.allUsers.map((user) => {
             return (
               <div className="profileImg left mt-3">
