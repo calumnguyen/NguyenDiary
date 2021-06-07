@@ -426,6 +426,7 @@
 }
 .userProfile .profileDesc p {
   color: var(--theme-white);
+  word-break: break-all;
 }
 .dashboard .customMargin {
   margin-top: 10vh;
@@ -669,11 +670,11 @@
   .profileImg.left {
     background: #fff5f4;
     border-radius: 20px;
-    width: 85px;
+    width: 65px;
 
     img {
-      width: 85px;
-      height: 85px;
+      width: 65px;
+      height: 65px;
       border-radius: 20px;
     }
   }
@@ -741,9 +742,6 @@
       color: var(--theme-white);
       margin-top: 5%;
     }
-  }
-  .profileThumbnailImg{
-    margin-top: -35px;
   }
 }
 

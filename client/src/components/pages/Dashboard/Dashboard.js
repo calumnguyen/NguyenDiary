@@ -23,6 +23,7 @@ import Alert from "../../layout/Alert";
 
 import Accounts from "../../Accounts";
 import Header from "../../Header";
+import UpdateInfo from "../../UpdateInfo";
 
 const DATE_FORMAT = "DD/MM/YYYY";
 const DATE_FORMAT_WITH_TIME = "h:mm A DD/MM/YYYY";
@@ -564,7 +565,7 @@ class Dashboard extends Component {
                 ? this.getMentalCalendar()
                 : null}
               {this.state.selectedTab === "updateinfo"
-                ? this.getUpdateImage()
+                ? <UpdateInfo authUser={this.state.user}/>
                 : null}
               {this.state.selectedTab === "accounts"
                 ? <Accounts authUser={this.state.user}/>
