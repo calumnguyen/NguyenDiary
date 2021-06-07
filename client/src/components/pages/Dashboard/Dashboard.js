@@ -68,6 +68,7 @@ class Dashboard extends Component {
     };
   }
   async componentDidMount() {
+    this.props.getAllUsers();
     await this.props.loadUser();
     if (this.props.auth && this.props.auth.user) {
       this.setState({ user: this.props.auth.user });
@@ -373,6 +374,7 @@ class Dashboard extends Component {
             selectedDate={this.state.selectedDate}
             handleDateChange={this.handleDateChange}
             allDates={this.props.allDates}
+            allUsers={this.props.allUsers}
           />
         </div>
         <div className="col-sm-8">

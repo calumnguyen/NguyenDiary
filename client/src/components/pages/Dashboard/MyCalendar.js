@@ -2,9 +2,15 @@ import react, { Component, useState, useEffect } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
+import myImg from "../../../assets/img/default_profile_pics/others.png";
 
 function MyCalendar(props) {
   const [selectedDate, onDateChange] = useState(props.selectedDate);
+  const [isCalendarToggleChecked, onCalendarToggle] = useState(false);
+  console.log(props.allUsers);
+  const handleCalendarToggle = () => {
+    onCalendarToggle(!isCalendarToggleChecked);
+  };
 
   let datesHavingEntry = props.allDates
     ? props.allDates.diary.map((day) => day.day)
@@ -67,11 +73,14 @@ function MyCalendar(props) {
             <p className="calendar_title">Your Mental Calendar</p>
           </div>
           <div className="col-sm-2 col-xs-2">
-            <div className="calendar_toggle wrapper">
+            <div
+              className="calendar_toggle wrapper"
+              onClick={handleCalendarToggle}
+            >
               <input
                 type="checkbox"
-                id="menuToggler"
                 className="input-toggler"
+                checked={isCalendarToggleChecked}
               />
               <label htmlFor="menuToggler" className="menu-toggler">
                 <span className="menu-toggler__line"></span>
@@ -81,6 +90,30 @@ function MyCalendar(props) {
             </div>
           </div>
         </div>
+        {isCalendarToggleChecked ? (
+          <div className="row">
+            <div className="col-sm-12">
+              <div className="all_users_profile">
+                <ul className="list-group">
+                  <li className="list-group-item d-flex">
+                    Your Mental Calendar
+                  </li>
+                  {props.allUsers && props.allUsers.length > 0 ? (
+                    <>
+                      {props.allUsers.map((user) => {
+                        return (
+                          <li className="list-group-item">
+                            {user.information.fullName}
+                          </li>
+                        );
+                      })}
+                    </>
+                  ) : null}
+                </ul>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
       <Calendar
         onChange={onDateChange}

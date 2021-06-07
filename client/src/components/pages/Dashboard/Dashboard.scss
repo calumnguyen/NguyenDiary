@@ -7,6 +7,37 @@
   padding: 20px;
   padding-top: 40px;
 
+  .all_users_profile{
+    position: absolute;
+    background: var(--theme-black);
+    left: 0;
+    width: 100%;
+    padding: 0 15px;
+    .list-group .list-group-item{
+      transition-property: transform, opacity;
+      transition-duration: 0.5s, 0.25s;
+      transition-delay: 0s, 0.5s;
+      animation-name: slideinToggleOptions;
+      animation-duration: 0.5s;
+      animation-iteration-count: 1;
+      animation-timing-function: ease-out;
+    }
+    li{
+      background: var(--theme-black);
+      border: 2px solid var(--theme-orange);
+      border-bottom: 0;
+      font-size: 20px;
+      line-height: 30px;
+      color: var(--theme-orange);
+      cursor: pointer;
+    }
+    li:first-child{
+      color: var(--theme-white);
+    }
+    li:last-child{
+      border-bottom: 2px solid var(--theme-orange);
+    }
+  }
   .react-calendar {
     border: none;
     background: var(--theme-black);
