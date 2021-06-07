@@ -6,6 +6,7 @@ import { Redirect } from "react-router-dom";
 
 import MyCalendar from "./MyCalendar";
 import {
+  getUser,
   getAllUsers,
   saveDiaryAnswers,
   getDiaryAnswers,
@@ -16,10 +17,11 @@ import { loadUser } from "../../actions/auth";
 import { OCAlertsProvider } from "@opuscapita/react-alerts";
 import { OCAlert } from "@opuscapita/react-alerts";
 import Alert from "../layout/Alert";
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
 import "./MentalCalendar.scss";
+import { compareSync } from "bcryptjs";
 
 const DATE_FORMAT = "DD/MM/YYYY";
 const DATE_FORMAT_WITH_TIME = "h:mm A DD/MM/YYYY";
@@ -53,7 +55,26 @@ class MentalCalendar extends Component {
       this.props.getAllDiaryDates(this.props.auth.user._id);
     }
   }
-  
+
+  changeSelectedUser = async (userId) => {
+    let myDate = moment(this.state.selectedDate).format("DD-MM-YYYY");
+    await this.props.getDiaryAnswers(userId, myDate);
+    await this.props.getUser(userId);
+    this.setState({user: this.props.selectedUser});
+    this.props.getAllDiaryDates(userId);
+    if (this.props.allAnswers) {
+      let newDiaryAnswers = [
+        this.props.allAnswers.diary[0].ans1,
+        this.props.allAnswers.diary[0].ans2,
+        this.props.allAnswers.diary[0].ans3,
+        this.props.allAnswers.diary[0].ans4,
+        this.props.allAnswers.diary[0].ans5,
+      ];
+      this.setState({ diaryAnswers: newDiaryAnswers });
+    } else {
+      this.setState({ diaryAnswers: ["", "", "", "", ""] });
+    }
+  }
   handleDateChange = async (changedDate) => {
     this.setState({
       selectedDate: changedDate,
@@ -136,20 +157,20 @@ class MentalCalendar extends Component {
     console.log(modifiedDate, this.state.selectedDate);
     let firstDate = moment(modifiedDate).format(DATE_FORMAT);
     let secondDate = moment(this.state.selectedDate).format(DATE_FORMAT);
-    console.log(firstDate, secondDate)
-    if(firstDate!=secondDate){
+    console.log(firstDate, secondDate);
+    if (firstDate != secondDate) {
       confirmAlert({
-        title: 'Confirm Date Change',
-        message: 'Finish all steps, else everything will be discarded',
+        title: "Confirm Date Change",
+        message: "Finish all steps, else everything will be discarded",
         buttons: [
           {
-            label: 'Yes, confirm.',
+            label: "Yes, confirm.",
             onClick: () => {
               this.handleDateChange(changedDate);
             },
           },
           {
-            label: 'No, back to editing',
+            label: "No, back to editing",
             onClick: () => {},
           },
         ],
@@ -262,7 +283,37 @@ class MentalCalendar extends Component {
       </div>
     );
   };
-
+  viewAnswersBox = () => {
+    let allQues = [];
+    this.state.diaryQuestions.map((ques, idx) => {
+      allQues.push(
+        <div className="formBox display">
+          <p className="diaryQuestion display">
+            {this.state.diaryQuestions[idx]}{" "}
+          </p>
+          <div className="answersForm display">
+            <p className="answers-para">{this.state.diaryAnswers[idx]}</p>
+          </div>
+        </div>
+      );
+    });
+    return (
+      <div className="row">
+        <div className="col-sm-2">
+          <div className="profileImg display">
+            <img
+              src={this.state.user.information.avatar}
+              className="img img-responsive"
+            ></img>
+          </div>
+        </div>
+        <div className="col-sm-10">
+          <div className="allAnswers">{allQues}</div>
+        </div>
+      </div>
+    );
+    //return <div className="allAnswers">{allQues}</div>;
+  };
   getFormBoxForMentalCalendar = () => {
     let todaysDate = new Date(
       moment().millisecond(0).seconds(0).second(0).minute(0).hour(0)
@@ -297,8 +348,10 @@ class MentalCalendar extends Component {
       this.state.selectedDate
     ).isSameOrAfter(dateAfter7days, "days");
 
-    if (isSelectedDateInPrev7Days) {
-      if (this.props.allAnswers || this.state.formStarted) {
+    if (this.props.allAnswers) {
+      return this.viewAnswersBox();
+    } else if (isSelectedDateInPrev7Days) {
+      if (this.state.formStarted) {
         return this.getAnswersBox();
       } else {
         return (
@@ -366,6 +419,7 @@ class MentalCalendar extends Component {
                 allDates={this.props.allDates}
                 allUsers={this.props.allUsers}
                 authUserId={this.state.user._id}
+                changeSelectedUser={this.changeSelectedUser}
               />
             </div>
             <div className="col-sm-8">
@@ -401,6 +455,7 @@ MentalCalendar.propTypes = {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   allUsers: state.user.users ? state.user.users : null,
+  selectedUser: (state.user.user)?state.user.user:null,
   allAnswers: state.user.allAnswers ? state.user.allAnswers : null,
   diarySaved: state.user.diarySaved ? state.user.diarySaved : false,
   allDates: state.user.allDates ? state.user.allDates : null,
@@ -408,6 +463,7 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   loadUser,
+  getUser,
   getAllUsers,
   saveDiaryAnswers,
   getDiaryAnswers,

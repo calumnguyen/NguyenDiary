@@ -62,19 +62,23 @@ function MyCalendar(props) {
       return "react-calendar_single_dotted_tile";
     }
   };
+  const handleUserChange = async (userId) => {
+    await props.changeSelectedUser(userId)
+    handleCalendarToggle();
+  }
   const getUsersList = () => {
     let selfUser = [];
     let otherUser = [];
     props.allUsers.forEach((user) => {
       if(user._id===props.authUserId){
         selfUser.push(
-          <li className="list-group-item d-flex">
+          <li className="list-group-item d-flex" onClick={() => handleUserChange(user._id)}>
             Your Mental Calendar
           </li>
         )
       } else{
         otherUser.push(
-          <li className="list-group-item">
+          <li className="list-group-item" onClick={() => handleUserChange(user._id)}>
             {user.information.fullName}
           </li>
         );
