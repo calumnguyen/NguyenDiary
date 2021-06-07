@@ -34,31 +34,7 @@ class Dashboard extends Component {
     this.state = {
       selectedDate: new Date(),
       user: null,
-      headerTabs: [
-        {
-          name: "Mental Calendar",
-          status: "active",
-          slug: "mentalcalendar",
-        },
-        {
-          name: "Update Info",
-          status: "inactive",
-          slug: "updateinfo",
-        },
-        {
-          name: "Accounts",
-          status: "inactive",
-          slug: "accounts",
-        },
-        {
-          name: "Logout",
-          status: "inactive",
-          slug: "logout",
-        },
-      ],
-      isHeaderToggleClicked: false,
       selectedTab: "mentalcalendar",
-      hiddenFileInputUpdateImage: React.createRef(),
       diaryQuestions: [
         "How am I feeling today?",
         "What's been worrying me lately?",
@@ -69,9 +45,7 @@ class Dashboard extends Component {
       totalDiaryQuestions: 5,
       answeredQuestions: 0,
       formStarted: false,
-      diaryAnswers: ["", "", "", "", ""],
-      isFullNameChange: false,
-      isTaglineChange: false,
+      diaryAnswers: ["", "", "", "", ""]
     };
   }
   async componentDidMount() {
