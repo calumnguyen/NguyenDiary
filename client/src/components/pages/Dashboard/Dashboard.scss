@@ -594,6 +594,9 @@
       border-radius: 20px;
     }
   }
+  .startFormMsg{
+    word-break: break-all;
+  }
   .diary {
     height: auto;
     padding: 10%;
@@ -659,6 +662,9 @@
 
 // Accounts Section
 .getAccounts {
+  .startFormMsg{
+    word-break: break-all;
+  }
   .formBox {
     .accountEditBtnSection {
       padding: 0 35%;
