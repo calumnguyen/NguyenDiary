@@ -565,27 +565,27 @@
 .formBox {
   padding: 10px;
   text-align: center;
-  .startFormMsg{
+  .startFormMsg {
     word-break: break-all;
   }
-}
-.formBox .startFormBtn {
-  background: var(--theme-black);
-  color: var(--theme-white);
-  border: 2px solid var(--theme-orange);
-  border-radius: 20px;
-  padding: 15px;
-}
-.formBox .startFormMsg {
-  font-style: normal;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 17px;
-  color: var(--theme-white);
-  margin-top: 5%;
+  .startFormBtn {
+    background: var(--theme-black);
+    color: var(--theme-white);
+    border: 2px solid var(--theme-orange);
+    border-radius: 20px;
+    padding: 15px;
+  }
+  .startFormMsg {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 17px;
+    color: var(--theme-white);
+    margin-top: 5%;
+  }
 }
 
-// Update Image Section
+// Update Info Section
 .updateImage {
   .profileImg {
     background: #fff5f4;
@@ -597,7 +597,7 @@
       border-radius: 20px;
     }
   }
-  .startFormMsg{
+  .startFormMsg {
     word-break: break-all;
   }
   .diary {
@@ -609,8 +609,19 @@
     .formBox {
       padding: 10px;
       text-align: center;
+      .btnOverlay {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        margin: auto;
+      }
       .profileImg {
         width: 100%;
+        cursor: pointer;
+        &:hover .startFormBtn.overlay {
+          display: block;
+        }
         img {
           width: 100%;
           height: 150px;
@@ -636,7 +647,7 @@
             border-radius: 10px;
             color: var(--theme-white);
           }
-          .customTick{
+          .customTick {
             color: var(--theme-orange);
             font-size: 25px;
           }
@@ -649,8 +660,23 @@
       border: 2px solid var(--theme-orange);
       border-radius: 20px;
       padding: 15px;
-      margin-top: 20px;
+      //margin-top: 20px;
       width: 100%;
+      display: none;
+      animation: fadeInAnimation ease 0.5s;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      &:hover {
+        background: #eb5e0b1f;
+      }
+      &.overlay {
+        background: #0d0c0c6b;
+        color: var(--theme-white);
+        border: none;
+        padding: 15px;
+        margin-top: 20px;
+        transition: 1s ease-in-out;
+      }
     }
     .formBox .startFormMsg {
       font-style: normal;
@@ -661,11 +687,19 @@
       margin-top: 5%;
     }
   }
+  @keyframes fadeInAnimation {
+    0% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
 }
 
 // Accounts Section
 .getAccounts {
-  .startFormMsg{
+  .startFormMsg {
     word-break: break-all;
   }
   .formBox {
@@ -687,6 +721,7 @@
       border-radius: 20px;
     }
   }
+  
   .diary {
     height: auto;
     padding: 10%;
@@ -696,8 +731,19 @@
     .formBox {
       padding: 10px;
       text-align: center;
+      .btnOverlay {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        margin: auto;
+      }
       .profileImg {
         width: 100%;
+        cursor: pointer;
+        &:hover .startFormBtn.overlay {
+          display: block;
+        }
         img {
           width: 100%;
           height: 150px;
@@ -723,7 +769,7 @@
             border-radius: 10px;
             color: var(--theme-white);
           }
-          .customTick{
+          .customTick {
             color: var(--theme-orange);
             font-size: 25px;
           }
@@ -736,11 +782,21 @@
       border: 2px solid var(--theme-orange);
       border-radius: 20px;
       padding: 15px;
-      margin-top: 20px;
+      margin-top: 0;
       width: 100%;
-      &:hover{
+      display: none;
+      animation: fadeInAnimation ease 0.5s;
+      animation-iteration-count: 1;
+      animation-fill-mode: forwards;
+      &:hover {
         background: #eb5e0b1f;
-        font-weight: bold;
+      }
+      &.overlay {
+        background: #0d0c0c6b;
+        color: var(--theme-white);
+        border: none;
+        padding: 15px;
+        margin-top: -10px;
       }
     }
     .formBox .startFormMsg {
@@ -754,7 +810,7 @@
   }
 }
 
-.Header{
+.Header {
   .UserInfoEdit {
     .fa {
       font-size: 15px;

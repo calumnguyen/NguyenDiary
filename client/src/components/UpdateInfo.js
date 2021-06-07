@@ -119,18 +119,20 @@ class Accounts extends Component {
                 <div className="row">
                   {/* On edit give upload image feature */}
                   <div className="col-sm-3">
-                    <div className="profileImg">
+                    <div className="profileImg" onClick={this.uploadImage}>
                       <img
                         src={this.state.selectedUser.information.avatar}
                         className="img"
                       ></img>
+                      <div className="btnOverlay">
+                        <button
+                          className="btn startFormBtn overlay"
+                        >
+                          Edit <i className="fa fa-edit ml-2 cursor-pointer" />
+                        </button>
+                      </div>
                     </div>
-                    <button
-                      className="btn startFormBtn"
-                      onClick={this.uploadImage}
-                    >
-                      Edit <i className="fa fa-edit ml-2 cursor-pointer" />
-                    </button>
+
                     <input
                       type="file"
                       ref={this.state.hiddenFileInputUpdateImage}
