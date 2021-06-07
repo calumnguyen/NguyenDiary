@@ -666,7 +666,7 @@
   .profileImg.left {
     cursor: pointer;
   }
-  .profileImg {
+  .profileImg.left {
     background: #fff5f4;
     border-radius: 20px;
     width: 85px;
@@ -694,6 +694,31 @@
           border-radius: 20px;
         }
       }
+      .userDetails {
+        .userName {
+          .fa {
+            font-size: 15px;
+          }
+        }
+        .UserInfoEdit {
+          justify-content: space-around;
+          .fa {
+            font-size: 15px;
+          }
+          input {
+            background: none;
+            border: 2px solid var(--theme-orange);
+            outline: none;
+            box-shadow: none;
+            border-radius: 10px;
+            color: var(--theme-white);
+          }
+          .customTick{
+            color: var(--theme-orange);
+            font-size: 25px;
+          }
+        }
+      }
     }
     .formBox .startFormBtn {
       background: var(--theme-black);
@@ -703,6 +728,10 @@
       padding: 15px;
       margin-top: 20px;
       width: 100%;
+      &:hover{
+        background: #eb5e0b1f;
+        font-weight: bold;
+      }
     }
     .formBox .startFormMsg {
       font-style: normal;
