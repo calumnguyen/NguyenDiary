@@ -6,6 +6,7 @@ import moment from "moment";
 function MyCalendar(props) {
   const [selectedDate, onDateChange] = useState(props.selectedDate);
   const [isCalendarToggleChecked, onCalendarToggle] = useState(false);
+
   const handleCalendarToggle = () => {
     onCalendarToggle(!isCalendarToggleChecked);
   };
@@ -66,14 +67,22 @@ function MyCalendar(props) {
     await props.changeSelectedUser(userId)
     handleCalendarToggle();
   }
+  let selectedUserName = "Your Mental Calendar";
   const getUsersList = () => {
     let selfUser = [];
+    let selfSelectedUser = [];
     let otherUser = [];
     props.allUsers.forEach((user) => {
       if(user._id===props.authUserId){
         selfUser.push(
           <li className="list-group-item d-flex" onClick={() => handleUserChange(user._id)}>
             Your Mental Calendar
+          </li>
+        )
+      } else if(user._id===props.selectedUserId){
+        selfSelectedUser.push(
+          <li className="list-group-item d-flex" onClick={() => handleUserChange(user._id)}>
+            {user.information.fullName}
           </li>
         )
       } else{
@@ -84,14 +93,14 @@ function MyCalendar(props) {
         );
       }
     })
-    return [...selfUser, ...otherUser];
+    return [...selfSelectedUser,...selfUser, ...otherUser];
   }
   return (
     <div className="theme_calendar">
       <div className="calendar_header">
         <div className="row">
           <div className="col-sm-10 col-xs-10">
-            <p className="calendar_title">Your Mental Calendar</p>
+            <p className="calendar_title">{(props.selectedUserId !== props.authUserId)?props.selectedUser.information.fullName:"Your Mental Calendar"}</p>
           </div>
           <div className="col-sm-2 col-xs-2">
             <div

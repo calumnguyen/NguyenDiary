@@ -33,7 +33,7 @@ class MentalCalendar extends Component {
       selectedDate: new Date(
         moment().millisecond(0).seconds(0).second(0).minute(0).hour(0)
       ),
-      user: null,
+      selectedUser: null,
       diaryQuestions: [
         "How am I feeling today?",
         "What's been worrying me lately?",
@@ -51,7 +51,7 @@ class MentalCalendar extends Component {
     this.props.getAllUsers();
     await this.props.loadUser();
     if (this.props.auth && this.props.auth.user) {
-      this.setState({ user: this.props.auth.user });
+      this.setState({ selectedUser: this.props.auth.user });
       this.props.getAllDiaryDates(this.props.auth.user._id);
     }
   }
@@ -60,7 +60,7 @@ class MentalCalendar extends Component {
     let myDate = moment(this.state.selectedDate).format("DD-MM-YYYY");
     await this.props.getDiaryAnswers(userId, myDate);
     await this.props.getUser(userId);
-    this.setState({user: this.props.selectedUser});
+    this.setState({ selectedUser: this.props.selectedUser });
     this.props.getAllDiaryDates(userId);
     if (this.props.allAnswers) {
       let newDiaryAnswers = [
@@ -74,7 +74,7 @@ class MentalCalendar extends Component {
     } else {
       this.setState({ diaryAnswers: ["", "", "", "", ""] });
     }
-  }
+  };
   handleDateChange = async (changedDate) => {
     this.setState({
       selectedDate: changedDate,
@@ -82,7 +82,7 @@ class MentalCalendar extends Component {
       answeredQuestions: 0,
     });
     let myDate = moment(changedDate).format("DD-MM-YYYY");
-    await this.props.getDiaryAnswers(this.state.user._id, myDate);
+    await this.props.getDiaryAnswers(this.state.selectedUser._id, myDate);
     if (this.props.allAnswers) {
       let newDiaryAnswers = [
         this.props.allAnswers.diary[0].ans1,
@@ -123,12 +123,9 @@ class MentalCalendar extends Component {
 
   finishQuestions = async () => {
     if (this.state.diaryAnswers[this.state.answeredQuestions].length < 25) {
-      OCAlert.alertWarning(
-        "Please type in atleast 25 words to finish",
-        {
-          timeOut: 3000,
-        }
-      );
+      OCAlert.alertWarning("Please type in atleast 25 words to finish", {
+        timeOut: 3000,
+      });
       return;
     }
     let myDate = moment(this.state.selectedDate).format("DD-MM-YYYY");
@@ -140,12 +137,12 @@ class MentalCalendar extends Component {
       ans4: this.state.diaryAnswers[3],
       ans5: this.state.diaryAnswers[4],
     };
-    await this.props.saveDiaryAnswers(this.state.user._id, diaryObj);
+    await this.props.saveDiaryAnswers(this.state.selectedUser._id, diaryObj);
     if (this.props.diarySaved) {
       OCAlert.alertSuccess("Diary Updated Successfully :)", {
         timeOut: 3000,
       });
-      this.changeSelectedUser(this.state.user._id);
+      this.changeSelectedUser(this.state.selectedUser._id);
     } else {
       OCAlert.alertWarning("Oops! Could not save the diary :)", {
         timeOut: 3000,
@@ -164,10 +161,8 @@ class MentalCalendar extends Component {
     let modifiedDate = new Date(
       moment(changedDate).millisecond(0).seconds(0).second(0).minute(0).hour(0)
     );
-    console.log(modifiedDate, this.state.selectedDate);
     let firstDate = moment(modifiedDate).format(DATE_FORMAT);
     let secondDate = moment(this.state.selectedDate).format(DATE_FORMAT);
-    console.log(firstDate, secondDate);
     if (firstDate != secondDate) {
       confirmAlert({
         title: "Confirm Date Change",
@@ -312,7 +307,7 @@ class MentalCalendar extends Component {
         <div className="col-sm-2">
           <div className="profileImg display">
             <img
-              src={this.state.user.information.avatar}
+              src={this.state.selectedUser.information.avatar}
               className="img img-responsive"
             ></img>
           </div>
@@ -322,7 +317,6 @@ class MentalCalendar extends Component {
         </div>
       </div>
     );
-    //return <div className="allAnswers">{allQues}</div>;
   };
   getFormBoxForMentalCalendar = () => {
     let todaysDate = new Date(
@@ -357,9 +351,23 @@ class MentalCalendar extends Component {
     let isSelectedDateAfter7Days = moment(
       this.state.selectedDate
     ).isSameOrAfter(dateAfter7days, "days");
-
     if (this.props.allAnswers) {
       return this.viewAnswersBox();
+    } else if (
+      !this.props.allAnswers &&
+      this.props.auth.user && this.props.selectedUser &&
+      this.props.selectedUser._id !== this.props.auth.user._id
+    ) {
+      return (
+        <div className="formBox">
+          <p className="startFormMsg">
+            <span className="text-theme-orange">
+              {this.props.selectedUser.information.fullName}
+            </span>{" "}
+            has not made entry for this day
+          </p>
+        </div>
+      );
     } else if (isSelectedDateInPrev7Days) {
       if (this.state.formStarted) {
         return this.getAnswersBox();
@@ -418,7 +426,7 @@ class MentalCalendar extends Component {
     this.setState({ selectedTab: currentTab });
   };
   render() {
-    if (this.state.user) {
+    if (this.state.selectedUser) {
       return (
         <div className="MentalCalendar">
           <div className="row customMargin p-3 questionsBox">
@@ -428,7 +436,13 @@ class MentalCalendar extends Component {
                 handleDateChange={this.handleDateChange}
                 allDates={this.props.allDates}
                 allUsers={this.props.allUsers}
-                authUserId={this.state.user._id}
+                selectedUserId={this.state.selectedUser._id}
+                selectedUser={this.state.selectedUser}
+                authUserId={
+                  this.props.auth && this.props.auth.user
+                    ? this.props.auth.user._id
+                    : null
+                }
                 changeSelectedUser={this.changeSelectedUser}
               />
             </div>
@@ -465,7 +479,7 @@ MentalCalendar.propTypes = {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   allUsers: state.user.users ? state.user.users : null,
-  selectedUser: (state.user.user)?state.user.user:null,
+  selectedUser: state.user.user ? state.user.user : null,
   allAnswers: state.user.allAnswers ? state.user.allAnswers : null,
   diarySaved: state.user.diarySaved ? state.user.diarySaved : false,
   allDates: state.user.allDates ? state.user.allDates : null,
