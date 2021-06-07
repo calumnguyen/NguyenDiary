@@ -104,6 +104,9 @@
     }
   }
 
+  .react-calendar__tile.react-calendar__tile--active:hover{
+    background: var(--theme-orange);
+  }
   // For Active and Focus status for Date,Month,Year, Decade on Click
   .react-calendar__tile--active,
   .react-calendar__tile--active:enabled:focus {
