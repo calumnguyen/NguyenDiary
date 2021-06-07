@@ -1,14 +1,11 @@
 import React, { PureComponent } from "react";
 import "./Home.scss";
 import ProfileCard from "./ProfileCard";
-import { Magic } from "magic-sdk";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import Alert from "../../layout/Alert";
 import MyLoader from "../../layout/MyLoader";
-import { MAGIC_LINK_PUBLIC_KEY } from "../../../utils/constants";
 
 // import { confirmAlert } from 'react-confirm-alert';
 // import 'react-confirm-alert/src/react-confirm-alert.css';

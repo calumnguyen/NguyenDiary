@@ -4,38 +4,34 @@ import { connect } from "react-redux";
 import moment from "moment";
 import { Redirect } from "react-router-dom";
 
-import "./Dashboard.scss";
 import MyCalendar from "./MyCalendar";
-import { loadUser, logout } from "../../../actions/auth";
 import {
   getAllUsers,
-  updateUserImage,
   saveDiaryAnswers,
   getDiaryAnswers,
   getAllDiaryDates,
-  updateUser,
-} from "../../../actions/user";
+} from "../../actions/user";
+import { loadUser } from "../../actions/auth";
 
-import MyLoader from "../../layout/MyLoader";
 import { OCAlertsProvider } from "@opuscapita/react-alerts";
 import { OCAlert } from "@opuscapita/react-alerts";
-import Alert from "../../layout/Alert";
+import Alert from "../layout/Alert";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import Accounts from "../../Accounts";
-import Header from "../../Header";
-import UpdateInfo from "../../UpdateInfo";
-import MentalCalendar from "../../MentalCalendar/MentalCalendar";
+import "./MentalCalendar.scss";
 
 const DATE_FORMAT = "DD/MM/YYYY";
 const DATE_FORMAT_WITH_TIME = "h:mm A DD/MM/YYYY";
 
-class Dashboard extends Component {
+class MentalCalendar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      selectedDate: new Date(),
+      selectedDate: new Date(
+        moment().millisecond(0).seconds(0).second(0).minute(0).hour(0)
+      ),
       user: null,
-      selectedTab: "mentalcalendar",
       diaryQuestions: [
         "How am I feeling today?",
         "What's been worrying me lately?",
@@ -46,7 +42,7 @@ class Dashboard extends Component {
       totalDiaryQuestions: 5,
       answeredQuestions: 0,
       formStarted: false,
-      diaryAnswers: ["", "", "", "", ""]
+      diaryAnswers: ["", "", "", "", ""],
     };
   }
   async componentDidMount() {
@@ -57,7 +53,7 @@ class Dashboard extends Component {
       this.props.getAllDiaryDates(this.props.auth.user._id);
     }
   }
-
+  
   handleDateChange = async (changedDate) => {
     this.setState({
       selectedDate: changedDate,
@@ -79,7 +75,7 @@ class Dashboard extends Component {
       this.setState({ diaryAnswers: ["", "", "", "", ""] });
     }
   };
-  
+
   increaseDateByOne = () => {
     let new_date = new Date(moment(this.state.selectedDate).add(1, "days"));
     this.setState({ selectedDate: new_date });
@@ -131,6 +127,34 @@ class Dashboard extends Component {
     this.setState({
       diaryAnswers: updatedDiaryAnswers,
     });
+  };
+  showConfirmationForDateChange = (changedDate) => {
+    console.log(changedDate, this.state.selectedDate);
+    let modifiedDate = new Date(
+      moment(changedDate).millisecond(0).seconds(0).second(0).minute(0).hour(0)
+    );
+    console.log(modifiedDate, this.state.selectedDate);
+    let firstDate = moment(modifiedDate).format(DATE_FORMAT);
+    let secondDate = moment(this.state.selectedDate).format(DATE_FORMAT);
+    console.log(firstDate, secondDate)
+    if(firstDate!=secondDate){
+      confirmAlert({
+        title: 'Confirm Date Change',
+        message: 'Finish all steps, else everything will be discarded',
+        buttons: [
+          {
+            label: 'Yes, confirm.',
+            onClick: () => {
+              this.handleDateChange(changedDate);
+            },
+          },
+          {
+            label: 'No, back to editing',
+            onClick: () => {},
+          },
+        ],
+      });
+    }
   };
   getAnswersBox = () => {
     return (
@@ -326,72 +350,48 @@ class Dashboard extends Component {
       );
     }
   };
-  getMentalCalendar = () => {
-    return (
-      <div className="row customMargin p-3 questionsBox">
-        <div className="col-sm-4">
-          <MyCalendar
-            selectedDate={this.state.selectedDate}
-            handleDateChange={this.handleDateChange}
-            allDates={this.props.allDates}
-            allUsers={this.props.allUsers}
-            authUserId={this.state.user._id}
-          />
-        </div>
-        <div className="col-sm-8">
-          <div className="diary">
-            <p className="selected_date">
-              <span onClick={this.decreaseDateByOne} className="arrow_btns">
-                <i className="fa fa-chevron-left mr-3"></i>
-              </span>
-              {moment(this.state.selectedDate).format(DATE_FORMAT)}
-              <span onClick={this.increaseDateByOne} className="arrow_btns">
-                <i className="fa fa-chevron-right ml-3"></i>
-              </span>
-            </p>
-            {this.getFormBoxForMentalCalendar()}
-          </div>
-        </div>
-      </div>
-    );
-  };
-  
+
   handleSelectedTabChange = (currentTab) => {
-    this.setState({selectedTab: currentTab})
-  }
+    this.setState({ selectedTab: currentTab });
+  };
   render() {
     if (this.state.user) {
       return (
-        <>
-          <MyLoader />
-          <Alert />
-          <OCAlertsProvider />
-          <section className="dashboard">
-            <div className="container">
-              <Header authUser={this.state.user} handleSelectedTabChange={this.handleSelectedTabChange}/>
-              {this.state.selectedTab === "mentalcalendar"
-                ? <MentalCalendar/>
-                : null}
-              {this.state.selectedTab === "updateinfo"
-                ? <UpdateInfo authUser={this.state.user}/>
-                : null}
-              {this.state.selectedTab === "accounts"
-                ? <Accounts authUser={this.state.user}/>
-                : null}
+        <div className="MentalCalendar">
+          <div className="row customMargin p-3 questionsBox">
+            <div className="col-sm-4">
+              <MyCalendar
+                selectedDate={this.state.selectedDate}
+                handleDateChange={this.handleDateChange}
+                allDates={this.props.allDates}
+                allUsers={this.props.allUsers}
+                authUserId={this.state.user._id}
+              />
             </div>
-          </section>
-        </>
+            <div className="col-sm-8">
+              <div className="diary">
+                <p className="selected_date">
+                  <span onClick={this.decreaseDateByOne} className="arrow_btns">
+                    <i className="fa fa-chevron-left mr-3"></i>
+                  </span>
+                  {moment(this.state.selectedDate).format(DATE_FORMAT)}
+                  <span onClick={this.increaseDateByOne} className="arrow_btns">
+                    <i className="fa fa-chevron-right ml-3"></i>
+                  </span>
+                </p>
+                {this.getFormBoxForMentalCalendar()}
+              </div>
+            </div>
+          </div>
+        </div>
       );
     } else {
-      return <MyLoader />;
+      return null;
     }
   }
 }
 
-Dashboard.propTypes = {
-  getAllUsers: PropTypes.func,
-  logout: PropTypes.func,
-  auth: PropTypes.object,
+MentalCalendar.propTypes = {
   loadUser: PropTypes.func,
   getDiaryAnswers: PropTypes.func,
   saveDiaryAnswers: PropTypes.func,
@@ -400,7 +400,6 @@ Dashboard.propTypes = {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  userUpdated: state.user.saved ? state.user.saved : false,
   allUsers: state.user.users ? state.user.users : null,
   allAnswers: state.user.allAnswers ? state.user.allAnswers : null,
   diarySaved: state.user.diarySaved ? state.user.diarySaved : false,
@@ -408,12 +407,9 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps, {
-  logout,
   loadUser,
-  updateUserImage,
   getAllUsers,
   saveDiaryAnswers,
   getDiaryAnswers,
   getAllDiaryDates,
-  updateUser,
-})(Dashboard);
+})(MentalCalendar);
