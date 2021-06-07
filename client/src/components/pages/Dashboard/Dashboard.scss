@@ -194,6 +194,7 @@
   .react-calendar__navigation button:enabled:focus {
     background: none;
     border: none;
+    outline: none !important;
   }
 
   .react-calendar__navigation__label {
