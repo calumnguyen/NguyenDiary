@@ -3,8 +3,15 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import moment from "moment";
 
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+
+const DATE_FORMAT = "DD/MM/YYYY";
+const DATE_FORMAT_WITH_TIME = "h:mm A DD/MM/YYYY";
+
 function MyCalendar(props) {
-  const [selectedDate, onDateChange] = useState(props.selectedDate);
+  const [selectedDate, onDateChangeFinal] = useState(props.selectedDate);
+  const [selectedDateTemp, onDateChange] = useState(props.selectedDate);
   const [isCalendarToggleChecked, onCalendarToggle] = useState(false);
 
   const handleCalendarToggle = () => {
@@ -35,9 +42,40 @@ function MyCalendar(props) {
     }
     return 1;
   };
+
+  const showConfirmationForDateChange = (changedTempDate) => {
+    let modifiedDate = new Date(
+      moment(changedTempDate).millisecond(0).seconds(0).second(0).minute(0).hour(0)
+    );
+    let firstDate = moment(modifiedDate).format(DATE_FORMAT);
+    let secondDate = moment(selectedDate).format(DATE_FORMAT);
+    if (firstDate !== secondDate && props.formStarted) {
+      confirmAlert({
+        title: "Confirm Date Change",
+        message: "Finish all steps, else everything will be discarded",
+        buttons: [
+          {
+            label: "Yes, confirm.",
+            onClick: () => {
+              onDateChangeFinal(changedTempDate);
+            },
+          },
+          {
+            label: "No, back to editing",
+            onClick: () => {},
+          },
+        ],
+      });
+    } else{
+      onDateChangeFinal(changedTempDate);
+    }
+  };
   useEffect(() => {
     props.handleDateChange(selectedDate);
   }, [selectedDate]);
+  useEffect(() => {
+    showConfirmationForDateChange(selectedDateTemp);
+  }, [selectedDateTemp]);
   useEffect(() => {
     onDateChange(props.selectedDate);
   }, [props.selectedDate]);
@@ -67,7 +105,6 @@ function MyCalendar(props) {
     await props.changeSelectedUser(userId)
     handleCalendarToggle();
   }
-  let selectedUserName = "Your Mental Calendar";
   const getUsersList = () => {
     let selfUser = [];
     let selfSelectedUser = [];

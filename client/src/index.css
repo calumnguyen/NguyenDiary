@@ -1,13 +1,14 @@
 @charset "UTF-8";
-@import url('./assets/css/bootstrap.min.css');
-@import url('./assets/fonts/font-awesome/css/font-awesome.min.css');
-@import url('./global.css');
-
 /* Import custom fonts here */
 @font-face {
   font-family: 'Montserrat';
   src: url('./assets/fonts/Montserrat/Montserrat-Regular.ttf');
 }
+@import url('./assets/css/bootstrap.min.css');
+@import url('./assets/fonts/font-awesome/css/font-awesome.min.css');
+@import url('./global.css');
+
+
 
 /* set default colors here */
 :root {

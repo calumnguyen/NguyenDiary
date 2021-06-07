@@ -43,3 +43,17 @@ code {
 .cursor-pointer{
   cursor: pointer;
 }
+
+.react-confirm-alert-body{
+	color: var(--theme-black) !important;
+  background: var(--theme-orange) !important; 
+  font-family: 'Montserrat' !important;
+}    
+
+.react-confirm-alert-overlay {
+    background: rgb(53 52 52 / 66%) !important;
+}
+
+.react-confirm-alert-button-group{
+    justify-content: space-evenly !important;
+}

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import moment from "moment";
-import { Redirect } from "react-router-dom";
 
 import MyCalendar from "./MyCalendar";
 import {
@@ -16,12 +15,8 @@ import { loadUser } from "../../actions/auth";
 
 import { OCAlertsProvider } from "@opuscapita/react-alerts";
 import { OCAlert } from "@opuscapita/react-alerts";
-import Alert from "../layout/Alert";
-import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css";
 
 import "./MentalCalendar.scss";
-import { compareSync } from "bcryptjs";
 
 const DATE_FORMAT = "DD/MM/YYYY";
 const DATE_FORMAT_WITH_TIME = "h:mm A DD/MM/YYYY";
@@ -155,32 +150,6 @@ class MentalCalendar extends Component {
     this.setState({
       diaryAnswers: updatedDiaryAnswers,
     });
-  };
-  showConfirmationForDateChange = (changedDate) => {
-    console.log(changedDate, this.state.selectedDate);
-    let modifiedDate = new Date(
-      moment(changedDate).millisecond(0).seconds(0).second(0).minute(0).hour(0)
-    );
-    let firstDate = moment(modifiedDate).format(DATE_FORMAT);
-    let secondDate = moment(this.state.selectedDate).format(DATE_FORMAT);
-    if (firstDate != secondDate) {
-      confirmAlert({
-        title: "Confirm Date Change",
-        message: "Finish all steps, else everything will be discarded",
-        buttons: [
-          {
-            label: "Yes, confirm.",
-            onClick: () => {
-              this.handleDateChange(changedDate);
-            },
-          },
-          {
-            label: "No, back to editing",
-            onClick: () => {},
-          },
-        ],
-      });
-    }
   };
   getAnswersBox = () => {
     return (
@@ -444,6 +413,7 @@ class MentalCalendar extends Component {
                     : null
                 }
                 changeSelectedUser={this.changeSelectedUser}
+                formStarted={this.state.formStarted}
               />
             </div>
             <div className="col-sm-8">
