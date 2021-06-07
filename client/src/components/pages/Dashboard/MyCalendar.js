@@ -64,7 +64,26 @@ function MyCalendar(props) {
       return "react-calendar_single_dotted_tile";
     }
   };
-
+  const getUsersList = () => {
+    let selfUser = [];
+    let otherUser = [];
+    props.allUsers.forEach((user) => {
+      if(user._id===props.authUserId){
+        selfUser.push(
+          <li className="list-group-item d-flex">
+            Your Mental Calendar
+          </li>
+        )
+      } else{
+        otherUser.push(
+          <li className="list-group-item">
+            {user.information.fullName}
+          </li>
+        );
+      }
+    })
+    return [...selfUser, ...otherUser];
+  }
   return (
     <div className="theme_calendar">
       <div className="calendar_header">
@@ -95,18 +114,9 @@ function MyCalendar(props) {
             <div className="col-sm-12">
               <div className="all_users_profile">
                 <ul className="list-group">
-                  <li className="list-group-item d-flex">
-                    Your Mental Calendar
-                  </li>
                   {props.allUsers && props.allUsers.length > 0 ? (
                     <>
-                      {props.allUsers.map((user) => {
-                        return (
-                          <li className="list-group-item">
-                            {user.information.fullName}
-                          </li>
-                        );
-                      })}
+                      {getUsersList()}
                     </>
                   ) : null}
                 </ul>

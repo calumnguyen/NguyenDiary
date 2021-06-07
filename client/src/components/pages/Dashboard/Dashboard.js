@@ -375,6 +375,7 @@ class Dashboard extends Component {
             handleDateChange={this.handleDateChange}
             allDates={this.props.allDates}
             allUsers={this.props.allUsers}
+            authUserId={this.state.user._id}
           />
         </div>
         <div className="col-sm-8">
