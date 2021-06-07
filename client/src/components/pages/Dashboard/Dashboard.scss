@@ -565,6 +565,9 @@
 .formBox {
   padding: 10px;
   text-align: center;
+  .startFormMsg{
+    word-break: break-all;
+  }
 }
 .formBox .startFormBtn {
   background: var(--theme-black);
@@ -751,6 +754,21 @@
   }
 }
 
+.Header{
+  .UserInfoEdit {
+    .fa {
+      font-size: 15px;
+    }
+    input {
+      background: none;
+      border: 2px solid var(--theme-orange);
+      outline: none;
+      box-shadow: none;
+      border-radius: 10px;
+      color: var(--theme-white);
+    }
+  }
+}
 /* ############################### MEDIA QUERIES ############################# */
 /* Mobile Media Query */
 @media only screen and (max-width: 767px) {
