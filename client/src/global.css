@@ -36,3 +36,7 @@ code {
 .btn:focus{
   box-shadow: none;
 }
+::selection{
+  background-color:var(--theme-white);
+  color: var(--theme-black);
+}
