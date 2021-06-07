@@ -22,7 +22,7 @@ cloudinary.config({
 // @access  Public
 router.get("/", async (req, res) => {
   try {
-    const allUsers = await User.find({}, { information: 1 });
+    const allUsers = await User.find({}, { "information.fullName": 1, "information.email":1, "information.avatar":1 });
     res.status(200).json({ msg: "success", allUsers });
   } catch (err) {
     console.log(err);
@@ -243,6 +243,25 @@ router.get("/get-diary-dates/:userId", auth, async (req, res) => {
       }
     );
     res.status(200).json({ allDates, msg: "dates fetched successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ errors: [{ msg: "Server error" }] });
+  }
+});
+
+// @route   Get api/users/:userId
+// @desc    Get Used by _id
+// @access  Private
+router.get("/:userId", auth, async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    let user = await User.findOne(
+      { _id: userId },
+      {
+        information: 1
+      }
+    );
+    res.status(200).json({ user });
   } catch (err) {
     console.log(err);
     res.status(500).json({ errors: [{ msg: "Server error" }] });

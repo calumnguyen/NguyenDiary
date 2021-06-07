@@ -23,9 +23,6 @@ const initialState = {
   error: {},
   saved: false,
   user: null,
-  resetToken: null,
-  passwordUpdated: false,
-  codeverified: false,
 };
 
 export default function (state = initialState, action) {
@@ -37,7 +34,6 @@ export default function (state = initialState, action) {
         ...state,
         loading: true,
         saved: false,
-        passwordUpdated: false,
       };
     case GET_USERS:
       return {
@@ -49,10 +45,9 @@ export default function (state = initialState, action) {
     case GET_USER:
       return {
         ...state,
-        profile: payload,
+        ...payload,
         loading: false,
         saved: false,
-        passwordUpdated: false,
       };
     case GET_DIARY_ANSWERS:
       return {
@@ -88,9 +83,7 @@ export default function (state = initialState, action) {
     case USER_UPDATED:
       return {
         ...state,
-        // users: payload,
         loading: false,
-        // passwordUpdated: true,
         saved: true,
       };
     case DIARY_UPDATED:
@@ -103,32 +96,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-      };
-    case PASSWORD_ERROR:
-      return {
-        ...state,
-        error: payload,
-        loading: false,
-        passwordUpdated: false,
-      };
-    case PASSWORD_UPDATED:
-      return {
-        ...state,
-        // users: payload,
-        loading: false,
-        passwordUpdated: true,
-      };
-    case VERIFCATION_ERROR:
-      return {
-        ...state,
-        loading: false,
-        codeverified: false,
-      };
-    case PASSWORD_CONFIRMATION:
-      return {
-        ...state,
-        loading: false,
-        passwordConfirmed: true,
       };
     default:
       return state;

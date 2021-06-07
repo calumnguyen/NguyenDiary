@@ -12,7 +12,7 @@ const magic = new Magic(process.env.magic_api_key_secret);
 // @access  Private
 router.get("/", auth, async (req, res) => {
   try {    
-    const user = await User.findOne({ "information.email": req.email });
+    const user = await User.findOne({ "information.email": req.email },{information:1});
     res.json(user);
   } catch (err) {
     console.log(err);

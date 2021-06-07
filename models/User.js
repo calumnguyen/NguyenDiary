@@ -16,9 +16,6 @@ const UserSchema = new Schema(
         type: String,
         required: true,
       },
-      issuer: {
-        type: String,
-      },
       contactNumber: {
         type: String,
         required: true,
@@ -31,10 +28,6 @@ const UserSchema = new Schema(
       gender: {
         type: String,
         required: true,
-      },
-      password: {
-        type: String,
-        requried: true,
       },
       accountStatus: {
         type: String,
@@ -57,21 +50,6 @@ const UserSchema = new Schema(
       sections: {
         type: [String],
         enum: ["Member", "Admin"],
-      },
-      //Until the password is not changed, this value will be false on default.
-      isPasswordChanged: {
-        type: Boolean,
-        default: false,
-      },
-      birthday: {
-        type: Date,
-      },
-      address: {
-        type: String,
-      },
-      date: {
-        type: Date,
-        default: Date.now,
       },
     },
     diary: [
