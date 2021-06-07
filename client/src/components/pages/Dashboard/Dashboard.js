@@ -21,6 +21,9 @@ import { OCAlertsProvider } from "@opuscapita/react-alerts";
 import { OCAlert } from "@opuscapita/react-alerts";
 import Alert from "../../layout/Alert";
 
+import Accounts from "../../Accounts";
+import Header from "../../Header";
+
 const DATE_FORMAT = "DD/MM/YYYY";
 const DATE_FORMAT_WITH_TIME = "h:mm A DD/MM/YYYY";
 
@@ -100,9 +103,7 @@ class Dashboard extends Component {
       this.setState({ diaryAnswers: ["", "", "", "", ""] });
     }
   };
-  handleLogOutRequest = () => {
-    this.props.logout();
-  };
+  
   increaseDateByOne = () => {
     let new_date = new Date(moment(this.state.selectedDate).add(1, "days"));
     this.setState({ selectedDate: new_date });
@@ -112,26 +113,6 @@ class Dashboard extends Component {
       moment(this.state.selectedDate).subtract(1, "days")
     );
     this.setState({ selectedDate: new_date });
-  };
-  handleTabChange = (idx) => {
-    let updatedHeaderTabs = [...this.state.headerTabs];
-    updatedHeaderTabs.forEach((tab) => (tab.status = "inactive"));
-    updatedHeaderTabs[idx].status = "active";
-    let currentTab = updatedHeaderTabs[idx];
-    updatedHeaderTabs.splice(idx, 1);
-    updatedHeaderTabs.unshift(currentTab);
-
-    this.setState({
-      headerTabs: updatedHeaderTabs,
-      isHeaderToggleClicked: !this.state.isHeaderToggleClicked,
-      selectedTab: currentTab.slug,
-    });
-    if (currentTab.slug === "logout") {
-      this.handleLogOutRequest();
-    }
-  };
-  toggleHeaderOptions = () => {
-    this.setState({ isHeaderToggleClicked: !this.state.isHeaderToggleClicked });
   };
 
   takeToNextStep = () => {
@@ -398,69 +379,6 @@ class Dashboard extends Component {
       </div>
     );
   };
-  getHeader = () => {
-    return (
-      <div className="row mt-5 reverse-col-flex">
-        <div className="col-sm-8">
-          <div className="userProfile">
-            <div className="profileImg">
-              <img
-                src={this.state.user.information.avatar}
-                className="img img-responsive"
-              ></img>
-            </div>
-            <div className="profileDesc">
-              <h3>{this.state.user.information.fullName}</h3>
-              <p>"{this.state.user.information.tagline}"</p>
-            </div>
-          </div>
-        </div>
-        <div className="col-sm-4">
-          <div className="headerDesc">
-            <ul className="list-group">
-              {this.state.headerTabs.map((tab, idx) => {
-                if (
-                  tab.slug === "accounts" &&
-                  this.state.user.information.systemRole === "member"
-                ) {
-                  return null;
-                } else {
-                  return (
-                    <li
-                      key={idx}
-                      className={`list-group-item ${tab.status} ${
-                        this.state.isHeaderToggleClicked ? "show" : "hide"
-                      }`}
-                      onClick={() => this.handleTabChange(idx)}
-                    >
-                      {tab.name}
-                    </li>
-                  );
-                }
-              })}
-            </ul>
-            <div className="headerToggle wrapper">
-              <input
-                type="checkbox"
-                id="headerMenuToggler"
-                className="input-toggler"
-                checked={this.state.isHeaderToggleClicked}
-              />
-              <label
-                htmlFor="headerMenuToggler"
-                className="menu-toggler"
-                onClick={this.toggleHeaderOptions}
-              >
-                <span className="menu-toggler__line"></span>
-                <span className="menu-toggler__line"></span>
-                <span className="menu-toggler__line"></span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
   handleFileUploadChange = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -629,56 +547,9 @@ class Dashboard extends Component {
       </div>
     );
   };
-  getAccounts = () => {
-    return (
-      <div className="row customMargin p-3 getAccounts">
-        <div className="col-sm-2">
-          {this.props.allUsers.map((user) => {
-            return (
-              <div className="profileImg left mt-3">
-                <img
-                  src={user.information.avatar}
-                  className="img img-fluid"
-                ></img>
-              </div>
-            );
-          })}
-        </div>
-        <div className="col-sm-10">
-          <div className="diary">
-            <div className="formBox">
-              <div className="row">
-                {/* On edit give upload image feature */}
-                <div className="col-sm-3">
-                  <div className="profileImg">
-                    <img
-                      src={this.state.user.information.avatar}
-                      className="img"
-                    ></img>
-                  </div>
-                </div>
-                <div className="col-sm-9">
-                  <h2 className="text-theme-orange mt-3">
-                    {this.state.user.information.fullName}
-                  </h2>
-                  <p className="startFormMsg">
-                    {this.state.user.information.email}
-                  </p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-sm-12">
-                  <div className="accountEditBtnSection">
-                    <button className="btn startFormBtn">Edit</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  handleSelectedTabChange = (currentTab) => {
+    this.setState({selectedTab: currentTab})
+  }
   render() {
     if (this.state.user) {
       return (
@@ -688,7 +559,7 @@ class Dashboard extends Component {
           <OCAlertsProvider />
           <section className="dashboard">
             <div className="container">
-              {this.getHeader()}
+              <Header authUser={this.state.user} handleSelectedTabChange={this.handleSelectedTabChange}/>
               {this.state.selectedTab === "mentalcalendar"
                 ? this.getMentalCalendar()
                 : null}
@@ -696,7 +567,7 @@ class Dashboard extends Component {
                 ? this.getUpdateImage()
                 : null}
               {this.state.selectedTab === "accounts"
-                ? this.getAccounts()
+                ? <Accounts authUser={this.state.user}/>
                 : null}
             </div>
           </section>
