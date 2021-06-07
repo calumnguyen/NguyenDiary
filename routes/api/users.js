@@ -55,6 +55,24 @@ router.post("/logout", async (req, res) => {
   //delete cookies and redirect to login page
 });
 
+// @route   POST api/users/update/:userId
+// @desc    Updates user info
+// @access  Private
+router.post("/update/:userId", auth, async (req, res) => {
+  try {
+      const userId = req.params.userId;
+      await User.updateOne({_id: userId},{
+        $set: {
+          "information" : req.body.information
+        }
+      })
+      res.status(200).json({ msg: "User Info updated successfully" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ errors: [{ msg: "Server error" }] });
+  }
+});
+
 // @route   POST api/users/edit-image
 // @desc    Updates user image
 // @access  Private

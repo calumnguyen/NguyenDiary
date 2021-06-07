@@ -6,17 +6,17 @@
   color: var(--theme-white);
   padding: 20px;
   padding-top: 40px;
-  font-family: 'Montserrat';
-  abbr{
-    font-family: 'Montserrat';
+  font-family: "Montserrat";
+  abbr {
+    font-family: "Montserrat";
   }
-  .all_users_profile{
+  .all_users_profile {
     position: absolute;
     background: var(--theme-black);
     left: 0;
     width: 100%;
     padding: 0 15px;
-    .list-group .list-group-item{
+    .list-group .list-group-item {
       transition-property: transform, opacity;
       transition-duration: 0.5s, 0.25s;
       transition-delay: 0s, 0.5s;
@@ -25,7 +25,7 @@
       animation-iteration-count: 1;
       animation-timing-function: ease-out;
     }
-    li{
+    li {
       background: var(--theme-black);
       border: 2px solid var(--theme-orange);
       border-bottom: 0;
@@ -34,10 +34,10 @@
       color: var(--theme-orange);
       cursor: pointer;
     }
-    li:first-child{
+    li:first-child {
       color: var(--theme-white);
     }
-    li:last-child{
+    li:last-child {
       border-bottom: 2px solid var(--theme-orange);
     }
   }
@@ -46,7 +46,7 @@
     background: var(--theme-black);
     width: 100%;
   }
-  
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   .react-calendar__viewContainer::-webkit-scrollbar {
     display: none;
@@ -107,7 +107,7 @@
     }
   }
 
-  .react-calendar__tile.react-calendar__tile--active:hover{
+  .react-calendar__tile.react-calendar__tile--active:hover {
     background: var(--theme-orange);
   }
   // For Active and Focus status for Date,Month,Year, Decade on Click
@@ -144,7 +144,7 @@
       }
     }
   }
-  .react-calendar__tile--active.react-calendar_single_whiteBorder_tile{
+  .react-calendar__tile--active.react-calendar_single_whiteBorder_tile {
     border-color: var(--theme-orange);
   }
   /* For Both Active(Selected) and Now(Today) for Days*/
@@ -176,12 +176,12 @@
     }
   }
 
-  .react-calendar_single_dotted_tile:after{
+  .react-calendar_single_dotted_tile:after {
     content: "●";
     color: var(--theme-orange);
   }
   //Add white border to tile
-  .react-calendar_single_whiteBorder_tile{
+  .react-calendar_single_whiteBorder_tile {
     border-color: var(--theme-white);
   }
 
@@ -346,18 +346,18 @@
 }
 
 //Main questions Box comprises on Calendar on left & Answers Box on right
-.questionsBox{
+.questionsBox {
   //.diary is the right part
-  .diary{
+  .diary {
     height: auto;
-    .formBox{
-      .form-text.status{
+    .formBox {
+      .form-text.status {
         color: var(--theme-white);
         margin-top: 10px;
         font-size: 14px;
       }
     }
-    .diaryQuestion{
+    .diaryQuestion {
       text-align: left;
       font-size: 22px;
       font-style: normal;
@@ -366,12 +366,12 @@
       color: var(--theme-white);
       margin-top: 5%;
     }
-    
-    .answersForm{
+
+    .answersForm {
       padding: 10px;
       border: 2px solid var(--theme-orange);
       border-radius: 20px;
-      textarea{
+      textarea {
         background: var(--theme-black);
         color: var(--theme-white);
         border: none;
@@ -384,13 +384,13 @@
         -webkit-box-shadow: none;
         -moz-box-shadow: none;
         box-shadow: none;
-        &:active{
+        &:active {
           border: none;
         }
-        &:focus{
+        &:focus {
           border: none;
         }
-        &:focus-visible{
+        &:focus-visible {
           border: none;
         }
         &::-webkit-scrollbar {
@@ -608,6 +608,31 @@
           width: 100%;
           height: 150px;
           border-radius: 20px;
+        }
+      }
+      .userDetails {
+        .userName {
+          .fa {
+            font-size: 15px;
+          }
+        }
+        .UserInfoEdit {
+          justify-content: space-around;
+          .fa {
+            font-size: 15px;
+          }
+          input {
+            background: none;
+            border: 2px solid var(--theme-orange);
+            outline: none;
+            box-shadow: none;
+            border-radius: 10px;
+            color: var(--theme-white);
+          }
+          .customTick{
+            color: var(--theme-orange);
+            font-size: 25px;
+          }
         }
       }
     }

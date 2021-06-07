@@ -40,3 +40,6 @@ code {
   background-color:var(--theme-white);
   color: var(--theme-black);
 }
+.cursor-pointer{
+  cursor: pointer;
+}

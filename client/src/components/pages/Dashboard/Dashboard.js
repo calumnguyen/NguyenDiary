@@ -13,6 +13,7 @@ import {
   saveDiaryAnswers,
   getDiaryAnswers,
   getAllDiaryDates,
+  updateUser,
 } from "../../../actions/user";
 
 import MyLoader from "../../layout/MyLoader";
@@ -36,9 +37,9 @@ class Dashboard extends Component {
           slug: "mentalcalendar",
         },
         {
-          name: "Update Image",
+          name: "Update Info",
           status: "inactive",
-          slug: "updateimage",
+          slug: "updateinfo",
         },
         {
           name: "Accounts",
@@ -65,6 +66,8 @@ class Dashboard extends Component {
       answeredQuestions: 0,
       formStarted: false,
       diaryAnswers: ["", "", "", "", ""],
+      isFullNameChange: false,
+      isTaglineChange: false,
     };
   }
   async componentDidMount() {
@@ -492,6 +495,29 @@ class Dashboard extends Component {
   uploadImage = () => {
     this.state.hiddenFileInputUpdateImage.current.click();
   };
+  handleUserInfoChange = (e) => {
+    let modifiedUser = { ...this.state.user };
+    modifiedUser.information[e.target.name] = e.target.value;
+    this.setState({ user: modifiedUser });
+  };
+  updateUserInfo = async () => {
+    await this.props.updateUser(this.state.user);
+    if (this.props.userUpdated) {
+      OCAlert.alertSuccess("Info Updated Successfully :)", {
+        timeOut: 3000,
+      });
+      if (this.state.isFullNameChange) {
+        this.setState({ isFullNameChange: !this.state.isFullNameChange });
+      }
+      if (this.state.isTaglineChange) {
+        this.setState({ isTaglineChange: !this.state.isTaglineChange });
+      }
+    } else {
+      OCAlert.alertWarning("Could not save info :(", {
+        timeOut: 3000,
+      });
+    }
+  };
   getUpdateImage = () => {
     return (
       <div className="row customMargin p-3 updateImage">
@@ -519,7 +545,7 @@ class Dashboard extends Component {
                     className="btn startFormBtn"
                     onClick={this.uploadImage}
                   >
-                    Edit
+                    Edit <i className="fa fa-edit ml-2 cursor-pointer" />
                   </button>
                   <input
                     type="file"
@@ -529,10 +555,69 @@ class Dashboard extends Component {
                     style={{ display: "none" }}
                   />
                 </div>
-                <div className="col-sm-9">
-                  <h2 className="text-theme-orange mt-3">
+                <div className="col-sm-9 userDetails">
+                  {/* <h2 className="text-theme-orange mt-3 userName">
                     {this.state.user.information.fullName}
-                  </h2>
+                    <i className="fa fa-edit ml-3 cursor-pointer" />
+                  </h2> */}
+                  <div className="form-group UserInfoEdit d-flex">
+                    {this.state.isFullNameChange ? (
+                      <>
+                        <input
+                          type="text"
+                          name="fullName"
+                          className="form-control editInfoInput"
+                          value={this.state.user.information.fullName}
+                          onChange={this.handleUserInfoChange}
+                        />
+                        <i
+                          className="fa fa-check ml-3 cursor-pointer customTick"
+                          onClick={this.updateUserInfo}
+                        />
+                      </>
+                    ) : (
+                      <h2 className="text-theme-orange mt-3 userName">
+                        {this.state.user.information.fullName}
+                        <i
+                          className="fa fa-edit ml-3 cursor-pointer"
+                          onClick={() =>
+                            this.setState({
+                              isFullNameChange: !this.state.isFullNameChange,
+                            })
+                          }
+                        />
+                      </h2>
+                    )}
+                  </div>
+                  <div className="form-group UserInfoEdit d-flex">
+                    {this.state.isTaglineChange ? (
+                      <>
+                        <input
+                          type="text"
+                          name="tagline"
+                          className="form-control editInfoInput"
+                          value={this.state.user.information.tagline}
+                          onChange={this.handleUserInfoChange}
+                        />
+                        <i
+                          className="fa fa-check ml-3 cursor-pointer customTick"
+                          onClick={this.updateUserInfo}
+                        />
+                      </>
+                    ) : (
+                      <p className="startFormMsg">
+                        {this.state.user.information.tagline}
+                        <i
+                          className="fa fa-edit ml-3 cursor-pointer"
+                          onClick={() =>
+                            this.setState({
+                              isTaglineChange: !this.state.isTaglineChange,
+                            })
+                          }
+                        ></i>
+                      </p>
+                    )}
+                  </div>
                   <p className="startFormMsg">
                     {this.state.user.information.email}
                   </p>
@@ -607,7 +692,7 @@ class Dashboard extends Component {
               {this.state.selectedTab === "mentalcalendar"
                 ? this.getMentalCalendar()
                 : null}
-              {this.state.selectedTab === "updateimage"
+              {this.state.selectedTab === "updateinfo"
                 ? this.getUpdateImage()
                 : null}
               {this.state.selectedTab === "accounts"
@@ -650,4 +735,5 @@ export default connect(mapStateToProps, {
   saveDiaryAnswers,
   getDiaryAnswers,
   getAllDiaryDates,
+  updateUser,
 })(Dashboard);

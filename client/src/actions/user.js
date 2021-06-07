@@ -100,23 +100,21 @@ export const getUser = (id) => async (dispatch) => {
 };
 
 // Update User
-export const updateUser = (user, id) => async (dispatch) => {
+export const updateUser = (userObj) => async (dispatch) => {
   dispatch({ type: USERS_LOADING });
   const config = {
     headers: {
-      "content-type": "multipart/form-data",
+      "content-type": "application/json",
     },
   };
 
   try {
-    const res = await axios.post(`/api/users/${id}`, user, config);
-
+    const res = await axios.post(`/api/users/update/${userObj._id}`, userObj, config);
     dispatch({
       type: USER_UPDATED,
       payload: res.data,
     });
-    dispatch(setAlert(res.data.msg, "success"));
-    dispatch(getAllUsers());
+    //dispatch(setAlert(res.data.msg, "success"));
   } catch (err) {
     const errors = err.response.data.errors;
     if (errors) {
