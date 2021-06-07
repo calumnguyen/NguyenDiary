@@ -73,3 +73,11 @@
   left: 45vw;
   animation: sk-bounce 2s infinite ease-in-out;
 }
+
+/* Media query for mobile */
+@media only screen and (max-width: 768px){
+  .double-bounce1, .double-bounce2 {
+    top: 40%;
+    left: 40%;
+  } 
+}
