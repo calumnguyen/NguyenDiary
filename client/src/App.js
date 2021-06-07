@@ -1,18 +1,20 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Route,
   BrowserRouter as Router,
   Switch,
-  withRouter,
 } from "react-router-dom";
 import "./global.css";
 
+//middlewares
 import setAuthToken from "./utils/setAuthToken";
 import PrivateRoute from "./routing/PrivateRoute";
 
 // Redux
 import { Provider } from "react-redux";
 import store from "./store";
+
+//custom components
 import Home from "./components/pages/Home/Home";
 import Dashboard from "./components/pages/Dashboard/Dashboard";
 import Error from "./components/pages/Error";
@@ -33,8 +35,8 @@ function App() {
           <PrivateRoute exact path="/dashboard" component={Dashboard} />
 
           {/* users */}
-          {/* <PrivateRoute exact path="/user/adduser" component={AddUser} /> */}
           <PrivateRoute exact path="/Error" component={Error} />
+
           <Route path="*" component={Error} />
         </Switch>
       </Router>

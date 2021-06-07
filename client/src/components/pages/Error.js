@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import Loader from "../layout/Loader";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Redirect, Link } from "react-router-dom";
 import ImgLogo from "../../assets/img/default_profile_pics/others.png";
+import MyLoader from "../layout/MyLoader";
+
 class Error extends Component {
   state = {
     redirect: false,
@@ -20,7 +21,7 @@ class Error extends Component {
 
     return (
       <React.Fragment>
-        <Loader />
+        <MyLoader />
         <div className="wrapper menu-collapsed">
           <div className="main-panel">
             {/* <div className='main-content'> */}

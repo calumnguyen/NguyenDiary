@@ -21,7 +21,6 @@ Alert.propTypes = {
 // We want to get the alert state
 // Mapping the redux state to props
 const mapStateToProps = (state) => ({
-  // here alert are equal to state.whatEverWeWantformRootReducer which is index.js
   alerts: state.alert,
 })
 export default connect(mapStateToProps)(Alert)

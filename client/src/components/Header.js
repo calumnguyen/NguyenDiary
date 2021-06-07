@@ -75,7 +75,7 @@ class Header extends Component {
                   </div>
                   <div className="profileDesc">
                     <h3>{this.props.authUser.information.fullName}</h3>
-                    <p>"{this.props.authUser.information.tagline}"</p>
+                    <p className="text-muted">"{this.props.authUser.information.tagline}"</p>
                   </div>
                 </div>
               </div>

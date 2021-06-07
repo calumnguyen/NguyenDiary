@@ -22,7 +22,7 @@ cloudinary.config({
 // @access  Public
 router.get("/", async (req, res) => {
   try {
-    const allUsers = await User.find({},{"information":1});
+    const allUsers = await User.find({}, { information: 1 });
     res.status(200).json({ msg: "success", allUsers });
   } catch (err) {
     console.log(err);
@@ -60,13 +60,16 @@ router.post("/logout", async (req, res) => {
 // @access  Private
 router.post("/update/:userId", auth, async (req, res) => {
   try {
-      const userId = req.params.userId;
-      await User.updateOne({_id: userId},{
+    const userId = req.params.userId;
+    await User.updateOne(
+      { _id: userId },
+      {
         $set: {
-          "information" : req.body.information
-        }
-      })
-      res.status(200).json({ msg: "User Info updated successfully" });
+          information: req.body.information,
+        },
+      }
+    );
+    res.status(200).json({ msg: "User Info updated successfully" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ errors: [{ msg: "Server error" }] });
@@ -89,10 +92,12 @@ router.post("/edit-image", auth, async (req, res) => {
       },
       { information: 1 }
     );
-
+    //delete previous profile image from Cloudinary
     prevAvatar = prevAvatar.information.avatar;
-    if(prevAvatar){
-      let prevAvatarName = prevAvatar.substring(prevAvatar.lastIndexOf("/") + 1);
+    if (prevAvatar) {
+      let prevAvatarName = prevAvatar.substring(
+        prevAvatar.lastIndexOf("/") + 1
+      );
       let prevAvatarNameWithoutExtension = prevAvatarName.substring(
         0,
         prevAvatarName.indexOf(".")
@@ -100,25 +105,45 @@ router.post("/edit-image", auth, async (req, res) => {
       await cloudinary.v2.uploader.destroy(
         prevAvatarNameWithoutExtension,
         function (error, result2) {
-          if(error){
-            res.status(500).json({ errors: [{ msg: "Could not update the image" }] });
+          if (error) {
+            res
+              .status(500)
+              .json({ errors: [{ msg: "Could not update the image" }] });
           }
         }
       );
-    }
-  
-    cloudinary.uploader.upload(req.body.updatedImage, async function (result) {
-      await User.updateOne(
-        { _id: req.body.userId },
-        {
-          $set: {
-            "information.avatar": result.secure_url,
-          },
+      await cloudinary.uploader.upload(
+        req.body.updatedImage,
+        async function (result) {
+          await User.updateOne(
+            { _id: req.body.userId },
+            {
+              $set: {
+                "information.avatar": result.secure_url,
+              },
+            }
+          );
+
+          res.status(200).json({ msg: "Profile Image upadated successfully" });
         }
       );
-      
-      res.status(200).json({ msg: "Profile Image upadated successfully" });
-    });
+    } else {
+      await cloudinary.uploader.upload(
+        req.body.updatedImage,
+        async function (result) {
+          await User.updateOne(
+            { _id: req.body.userId },
+            {
+              $set: {
+                "information.avatar": result.secure_url,
+              },
+            }
+          );
+
+          res.status(200).json({ msg: "Profile Image upadated successfully" });
+        }
+      );
+    }
   } catch (err) {
     console.log(err);
     res.status(500).json({ errors: [{ msg: "Server error" }] });
@@ -137,12 +162,15 @@ router.post("/update-diary", auth, async (req, res) => {
     const ans3 = req.body.ans3;
     const ans4 = req.body.ans4;
     const ans5 = req.body.ans5;
-    
+
     //check if the diary for given date exists
-    let ifDateExists = await User.findOne({_id: userId, "diary.day": day},{"_id":1});
-    if(ifDateExists){
+    let ifDateExists = await User.findOne(
+      { _id: userId, "diary.day": day },
+      { _id: 1 }
+    );
+    if (ifDateExists) {
       await User.updateOne(
-        { _id: userId , "diary.day": day },
+        { _id: userId, "diary.day": day },
         {
           $set: {
             "diary.$.ans1": ans1,
@@ -153,11 +181,14 @@ router.post("/update-diary", auth, async (req, res) => {
           },
         }
       );
-    } else{
-      let diaryObj = {day,ans1,ans2,ans3,ans4,ans5};
-      await User.updateOne({_id: userId},{
-        $push: {diary: diaryObj}
-      })
+    } else {
+      let diaryObj = { day, ans1, ans2, ans3, ans4, ans5 };
+      await User.updateOne(
+        { _id: userId },
+        {
+          $push: { diary: diaryObj },
+        }
+      );
     }
     res.status(200).json({ msg: "Diary saved successfully" });
   } catch (err) {
@@ -174,19 +205,22 @@ router.get("/get-diary/:userId/:day", auth, async (req, res) => {
     const userId = req.params.userId;
     const day = req.params.day;
     //check if the diary for given date exists
-    let ifDateExists = await User.findOne({_id: userId, "diary.day": day},{"_id":1});
+    let ifDateExists = await User.findOne(
+      { _id: userId, "diary.day": day },
+      { _id: 1 }
+    );
     let allAnswers = null;
-    if(ifDateExists){
+    if (ifDateExists) {
       allAnswers = await User.findOne(
-        { _id: userId , "diary.day": day },
+        { _id: userId, "diary.day": day },
         {
-          _id:0,
-          diary: {$elemMatch: {day: day}}
+          _id: 0,
+          diary: { $elemMatch: { day: day } },
         }
       );
-      res.status(200).json({allAnswers, msg: "answers fetched successfully"});
-    } else{
-      res.status(200).json({allAnswers, msg: "Given day does not exists" });
+      res.status(200).json({ allAnswers, msg: "answers fetched successfully" });
+    } else {
+      res.status(200).json({ allAnswers, msg: "Given day does not exists" });
     }
   } catch (err) {
     console.log(err);
@@ -204,11 +238,11 @@ router.get("/get-diary-dates/:userId", auth, async (req, res) => {
     allDates = await User.findOne(
       { _id: userId },
       {
-        _id:0,
-        "diary.day": 1
+        _id: 0,
+        "diary.day": 1,
       }
     );
-    res.status(200).json({allDates, msg: "dates fetched successfully"});
+    res.status(200).json({ allDates, msg: "dates fetched successfully" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ errors: [{ msg: "Server error" }] });
