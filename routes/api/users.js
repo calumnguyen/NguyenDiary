@@ -137,7 +137,7 @@ router.post("/update-diary", auth, async (req, res) => {
       );
     } else{
       let diaryObj = {day,ans1,ans2,ans3,ans4,ans5};
-      await User.update({_id: userId},{
+      await User.updateOne({_id: userId},{
         $push: {diary: diaryObj}
       })
     }
