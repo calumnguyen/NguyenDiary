@@ -19,7 +19,6 @@ class Accounts extends Component {
       isFullNameChange: false,
       isTaglineChange: false,
       isEmailChange: false,
-      selectedUserId: null,
       selectedUser: null,
       hiddenFileInputUpdateImage: React.createRef(),
     };
@@ -27,7 +26,6 @@ class Accounts extends Component {
   async componentDidMount() {
     if (this.props.authUser) {
       this.setState({
-        selectedUserId: this.props.authUser._id,
         selectedUser: this.props.authUser,
       });
     }
@@ -37,11 +35,11 @@ class Accounts extends Component {
     if (!file) return;
     const imgBase64 = await this.convertBase64(file);
     await this.props.updateUserImage(this.state.selectedUser._id, imgBase64);
-    await this.props.loadUser();
-    if (this.props.auth && this.props.auth.user) {
-      this.setState({ user: this.props.auth.user });
-    }
+    await this.props.loadAndSetAuthUser();
     if (this.props.userUpdated) {
+      this.setState({
+        selectedUser: this.props.authUser,
+      });
       OCAlert.alertSuccess("Profile Image Updated Successfully :)", {
         timeOut: 3000,
       });
@@ -75,9 +73,12 @@ class Accounts extends Component {
     modifiedUser.information[e.target.name] = e.target.value;
     this.setState({ selectedUser: modifiedUser });
   };
+  
   updateUserInfo = async () => {
     await this.props.updateUser(this.state.selectedUser);
     if (this.props.userUpdated) {
+      await this.props.loadAndSetAuthUser();
+      this.setState({selectedUser: this.props.authUser});
       OCAlert.alertSuccess("Info Updated Successfully :)", {
         timeOut: 3000,
       });
@@ -125,9 +126,7 @@ class Accounts extends Component {
                         className="img"
                       ></img>
                       <div className="btnOverlay">
-                        <button
-                          className="btn startFormBtn overlay"
-                        >
+                        <button className="btn startFormBtn overlay">
                           Edit <i className="fa fa-edit ml-2 cursor-pointer" />
                         </button>
                       </div>
@@ -224,6 +223,7 @@ Accounts.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   userUpdated: state.user.saved ? state.user.saved : false,
   allUsers: state.user.users ? state.user.users : null,
   fetchedUser: state.user.user ? state.user.user : null,

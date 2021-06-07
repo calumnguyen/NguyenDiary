@@ -60,6 +60,7 @@ class Header extends Component {
   updateUserInfo = async () => {
     await this.props.updateUser(this.state.selectedUser);
     if (this.props.userUpdated) {
+      this.props.loadAndSetAuthUser();
       if (this.state.isTaglineChange) {
         this.setState({ isTaglineChange: !this.state.isTaglineChange });
       }

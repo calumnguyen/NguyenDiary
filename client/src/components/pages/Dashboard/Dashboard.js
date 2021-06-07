@@ -46,7 +46,7 @@ class Dashboard extends Component {
       totalDiaryQuestions: 5,
       answeredQuestions: 0,
       formStarted: false,
-      diaryAnswers: ["", "", "", "", ""]
+      diaryAnswers: ["", "", "", "", ""],
     };
   }
   async componentDidMount() {
@@ -57,7 +57,14 @@ class Dashboard extends Component {
       this.props.getAllDiaryDates(this.props.auth.user._id);
     }
   }
-
+  loadAndSetAuthUser = async () => {
+    await this.props.loadUser();
+    if (this.props.auth && this.props.auth.user) {
+      this.setState({
+        user: this.props.auth.user,
+      });
+    }
+  };
   handleDateChange = async (changedDate) => {
     this.setState({
       selectedDate: changedDate,
@@ -79,7 +86,7 @@ class Dashboard extends Component {
       this.setState({ diaryAnswers: ["", "", "", "", ""] });
     }
   };
-  
+
   increaseDateByOne = () => {
     let new_date = new Date(moment(this.state.selectedDate).add(1, "days"));
     this.setState({ selectedDate: new_date });
@@ -355,10 +362,10 @@ class Dashboard extends Component {
       </div>
     );
   };
-  
+
   handleSelectedTabChange = (currentTab) => {
-    this.setState({selectedTab: currentTab})
-  }
+    this.setState({ selectedTab: currentTab });
+  };
   render() {
     if (this.state.user) {
       return (
@@ -368,16 +375,23 @@ class Dashboard extends Component {
           <OCAlertsProvider />
           <section className="dashboard">
             <div className="container">
-              <Header authUser={this.state.user} handleSelectedTabChange={this.handleSelectedTabChange}/>
-              {this.state.selectedTab === "mentalcalendar"
-                ? <MentalCalendar/>
-                : null}
-              {this.state.selectedTab === "updateinfo"
-                ? <UpdateInfo authUser={this.state.user}/>
-                : null}
-              {this.state.selectedTab === "accounts"
-                ? <Accounts authUser={this.state.user}/>
-                : null}
+              <Header
+                authUser={this.state.user}
+                handleSelectedTabChange={this.handleSelectedTabChange}
+                loadAndSetAuthUser={this.loadAndSetAuthUser}
+              />
+              {this.state.selectedTab === "mentalcalendar" ? (
+                <MentalCalendar />
+              ) : null}
+              {this.state.selectedTab === "updateinfo" ? (
+                <UpdateInfo
+                  authUser={this.state.user}
+                  loadAndSetAuthUser={this.loadAndSetAuthUser}
+                />
+              ) : null}
+              {this.state.selectedTab === "accounts" ? (
+                <Accounts authUser={this.state.user} />
+              ) : null}
             </div>
           </section>
         </>
