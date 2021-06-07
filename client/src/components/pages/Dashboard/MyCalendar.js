@@ -7,7 +7,6 @@ import myImg from "../../../assets/img/default_profile_pics/others.png";
 function MyCalendar(props) {
   const [selectedDate, onDateChange] = useState(props.selectedDate);
   const [isCalendarToggleChecked, onCalendarToggle] = useState(false);
-  console.log(props.allUsers);
   const handleCalendarToggle = () => {
     onCalendarToggle(!isCalendarToggleChecked);
   };
