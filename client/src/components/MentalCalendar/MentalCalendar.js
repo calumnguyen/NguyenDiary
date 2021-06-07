@@ -122,6 +122,15 @@ class MentalCalendar extends Component {
   };
 
   finishQuestions = async () => {
+    if (this.state.diaryAnswers[this.state.answeredQuestions].length < 25) {
+      OCAlert.alertWarning(
+        "Please type in atleast 25 words to finish",
+        {
+          timeOut: 3000,
+        }
+      );
+      return;
+    }
     let myDate = moment(this.state.selectedDate).format("DD-MM-YYYY");
     let diaryObj = {
       day: myDate,
@@ -136,6 +145,7 @@ class MentalCalendar extends Component {
       OCAlert.alertSuccess("Diary Updated Successfully :)", {
         timeOut: 3000,
       });
+      this.changeSelectedUser(this.state.user._id);
     } else {
       OCAlert.alertWarning("Oops! Could not save the diary :)", {
         timeOut: 3000,
