@@ -138,6 +138,7 @@ class MentalCalendar extends Component {
         timeOut: 3000,
       });
       this.changeSelectedUser(this.state.selectedUser._id);
+      this.setState({formStarted: false});
     } else {
       OCAlert.alertWarning("Oops! Could not save the diary :)", {
         timeOut: 3000,
