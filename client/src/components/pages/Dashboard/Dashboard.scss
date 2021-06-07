@@ -6,7 +6,10 @@
   color: var(--theme-white);
   padding: 20px;
   padding-top: 40px;
-
+  font-family: 'Montserrat';
+  abbr{
+    font-family: 'Montserrat';
+  }
   .all_users_profile{
     position: absolute;
     background: var(--theme-black);
