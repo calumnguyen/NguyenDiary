@@ -39,27 +39,26 @@ export const loadUser = () => async (dispatch) => {
 
 // Login
 export const login = (values) => async (dispatch) => {
-  dispatch({
-    type: AUTH_LOADING,
-  })
-  //Get magic Link DID token
-  const DID = await new Magic(
-    MAGIC_LINK_PUBLIC_KEY
-  ).auth.loginWithMagicLink({ email: values.email });
-
-  //set DID token in local storage for using it later
-  localStorage.setItem("DIDToken", DID);  
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    wthCredentials: true,
-    credentials: "same-origin",
-    method: "POST",
-    headers: { Authorization: `Bearer ${DID}` }
-  }
-
   try {
+    dispatch({
+      type: AUTH_LOADING,
+    })
+    //Get magic Link DID token
+    const DID = await new Magic(
+      MAGIC_LINK_PUBLIC_KEY
+    ).auth.loginWithMagicLink({ email: values.email });
+  
+    //set DID token in local storage for using it later
+    localStorage.setItem("DIDToken", DID);  
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      wthCredentials: true,
+      credentials: "same-origin",
+      method: "POST",
+      headers: { Authorization: `Bearer ${DID}` }
+    }
     const res = await axios.post('/api/auth', {}, config)
     dispatch({
       type: LOGIN_SUCCESS,
@@ -67,15 +66,9 @@ export const login = (values) => async (dispatch) => {
     })
     //dispatch(loadUser())
   } catch (err) {
-    if (err.response) {
-      const errors = err.response.data.errors
-      if (errors) {
-        errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')))
-      }
-    }
     dispatch({
       type: LOGIN_FAIL,
-      payload:err.response.data
+      payload:err
     })
   }
 }
