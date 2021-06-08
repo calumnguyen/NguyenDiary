@@ -17,7 +17,6 @@ class Accounts extends Component {
     super(props);
     this.state = {
       isFullNameChange: false,
-      isTaglineChange: false,
       isEmailChange: false,
       selectedUserId: null,
       selectedUser: null,
@@ -83,9 +82,6 @@ class Accounts extends Component {
       });
       if (this.state.isFullNameChange) {
         this.setState({ isFullNameChange: !this.state.isFullNameChange });
-      }
-      if (this.state.isTaglineChange) {
-        this.setState({ isTaglineChange: !this.state.isTaglineChange });
       }
       if (this.state.isEmailChange) {
         this.setState({ isEmailChange: !this.state.isEmailChange });
@@ -181,35 +177,6 @@ class Accounts extends Component {
                       )}
                     </div>
                     <div className="form-group UserInfoEdit d-flex">
-                      {this.state.isTaglineChange ? (
-                        <>
-                          <input
-                            type="text"
-                            name="tagline"
-                            className="form-control editInfoInput"
-                            value={this.state.selectedUser.information.tagline}
-                            onChange={this.handleUserInfoChange}
-                          />
-                          <i
-                            className="fa fa-check ml-3 cursor-pointer customTick"
-                            onClick={this.updateUserInfo}
-                          />
-                        </>
-                      ) : (
-                        <p className="startFormMsg">
-                          {this.state.selectedUser.information.tagline}
-                          <i
-                            className="fa fa-edit ml-3 cursor-pointer"
-                            onClick={() =>
-                              this.setState({
-                                isTaglineChange: !this.state.isTaglineChange,
-                              })
-                            }
-                          ></i>
-                        </p>
-                      )}
-                    </div>
-                    <div className="form-group UserInfoEdit d-flex">
                       {this.state.isEmailChange ? (
                         <>
                           <input
@@ -238,8 +205,7 @@ class Accounts extends Component {
                         </p>
                       )}
                     </div>
-                    {this.state.isTaglineChange &&
-                      this.state.isEmailChange &&
+                    {this.state.isEmailChange &&
                       this.state.isFullNameChange && (
                         <button
                           className="btn startFormBtn w-50"
