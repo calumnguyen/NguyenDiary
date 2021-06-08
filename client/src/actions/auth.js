@@ -10,6 +10,7 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   AUTH_LOADING,
+  LOGOUT_FAIL,
 } from './types'
 import { setAlert } from './alert'
 import setAuthToken from '../utils/setAuthToken'
@@ -46,6 +47,8 @@ export const login = (values) => async (dispatch) => {
     MAGIC_LINK_PUBLIC_KEY
   ).auth.loginWithMagicLink({ email: values.email });
 
+  //set DID token in local storage for using it later
+  localStorage.setItem("DIDToken", DID);  
   const config = {
     headers: {
       'Content-Type': 'application/json',
@@ -78,7 +81,28 @@ export const login = (values) => async (dispatch) => {
 }
 
 // Logout / clear profile
-export const logout = () => (dispatch) => {
+export const logout = () => async (dispatch) => {
   //take the same DID and pass it to Server and take response from there
-  dispatch({ type: LOGOUT })
+  const DID = localStorage.getItem("DIDToken");
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    wthCredentials: true,
+    credentials: "same-origin",
+    method: "POST",
+    headers: { Authorization: `Bearer ${DID}` }
+  }
+
+  try {
+    const res = await axios.post('/api/auth/logout', {}, config)
+    dispatch({
+      type: LOGOUT
+    })
+  } catch (err) {
+    dispatch({
+      type: LOGOUT_FAIL,
+      payload:err.response.data
+    })
+  }
 }

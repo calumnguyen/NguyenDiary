@@ -49,7 +49,7 @@ router.post("/", async (req, res) => {
         },
         process.env.jwtSecret,
         {
-          expiresIn: "7d", // expires in 7 days
+          expiresIn: "30d", // expires in 30 days
         }
       );
 
@@ -64,6 +64,22 @@ router.post("/", async (req, res) => {
       });
     }
   } catch (err) {
+    console.log(err);
+    res.status(500).json({ errors: [{ msg: "Server error" }] });
+  }
+});
+
+// @route   POST api/auth/logout
+// @desc    logs out users by DIDToken
+// @access  Private
+router.post("/logout", auth, async (req, res) => {
+  try{
+    const DIDToken = magic.utils.parseAuthorizationHeader(
+      req.headers.authorization
+    );
+    await magic.users.logoutByToken(DIDToken);
+    res.status(200).json({ "msg": "Logged out" });
+  } catch(err){
     console.log(err);
     res.status(500).json({ errors: [{ msg: "Server error" }] });
   }

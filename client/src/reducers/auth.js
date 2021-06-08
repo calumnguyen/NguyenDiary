@@ -5,6 +5,7 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   AUTH_LOADING,
+  LOGOUT_FAIL,
 } from "../actions/types";
 
 const initialState = {
@@ -41,8 +42,10 @@ export default function (state = initialState, action) {
 
     case LOGIN_FAIL:
     case AUTH_ERROR:
+    case LOGOUT_FAIL:
     case LOGOUT:
       localStorage.removeItem("token");
+      localStorage.removeItem("DIDToken");
       return {
         ...state,
         token: null,

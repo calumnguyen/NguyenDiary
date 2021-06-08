@@ -44,17 +44,6 @@ router.post("/add", auth, async (req, res) => {
   }
 });
 
-// @route   POST api/users/logout
-// @desc    logs out users by DIDToken
-// @access  Private
-router.post("/logout", async (req, res) => {
-  const DidToken = magic.utils.parseAuthorizationHeader(
-    req.headers.authorization
-  );
-  await mAdmin.users.logoutByToken(DIDToken);
-  //delete cookies and redirect to login page
-});
-
 // @route   POST api/users/update/:userId
 // @desc    Updates user info
 // @access  Private
