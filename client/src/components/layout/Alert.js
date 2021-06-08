@@ -1,7 +1,7 @@
-import React from 'react'
-import PropTypes from 'prop-types'
+import React from 'react';
+import PropTypes from 'prop-types';
 // Whenever you are interacting with redux whether you are calling an action or getting an action use connect
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
 
 const Alert = ({ alerts }) =>
   alerts
@@ -12,15 +12,15 @@ const Alert = ({ alerts }) =>
           {alert.msg}
         </div>
       ))
-    : ''
+    : '';
 
 Alert.propTypes = {
   alerts: PropTypes.array.isRequired,
-}
+};
 
 // We want to get the alert state
 // Mapping the redux state to props
 const mapStateToProps = (state) => ({
   alerts: state.alert,
-})
-export default connect(mapStateToProps)(Alert)
+});
+export default connect(mapStateToProps)(Alert);

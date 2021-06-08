@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import { connect } from "react-redux";
-import { logout } from "../actions/auth";
+import { connect } from 'react-redux';
+import { logout } from '../actions/auth';
 
-import { updateUser } from "../actions/user";
+import { updateUser } from '../actions/user';
 
-import { OCAlertsProvider } from "@opuscapita/react-alerts";
-import { OCAlert } from "@opuscapita/react-alerts";
+import { OCAlertsProvider } from '@opuscapita/react-alerts';
+import { OCAlert } from '@opuscapita/react-alerts';
 
 class Header extends Component {
   constructor(props) {
@@ -17,28 +17,28 @@ class Header extends Component {
       isTaglineChange: false,
       headerTabs: [
         {
-          name: "Mental Calendar",
-          status: "active",
-          slug: "mentalcalendar",
+          name: 'Ghi Chú Cảm Xúc',
+          status: 'active',
+          slug: 'mentalcalendar',
         },
         {
-          name: "Update Info",
-          status: "inactive",
-          slug: "updateinfo",
+          name: 'Tài Khoản',
+          status: 'inactive',
+          slug: 'updateinfo',
         },
         {
-          name: "Accounts",
-          status: "inactive",
-          slug: "accounts",
+          name: 'Admin',
+          status: 'inactive',
+          slug: 'accounts',
         },
         {
-          name: "Logout",
-          status: "inactive",
-          slug: "logout",
+          name: 'Đăng Xuất',
+          status: 'inactive',
+          slug: 'logout',
         },
       ],
       isHeaderToggleClicked: false,
-      selectedTab: "mentalcalendar",
+      selectedTab: 'mentalcalendar',
       isTaglineChange: false,
       selectedUser: null,
     };
@@ -65,7 +65,7 @@ class Header extends Component {
         this.setState({ isTaglineChange: !this.state.isTaglineChange });
       }
     } else {
-      OCAlert.alertWarning("Could not save tagline :(", {
+      OCAlert.alertWarning('Could not save tagline :(', {
         timeOut: 3000,
       });
     }
@@ -73,8 +73,8 @@ class Header extends Component {
 
   handleTabChange = (idx) => {
     let updatedHeaderTabs = [...this.state.headerTabs];
-    updatedHeaderTabs.forEach((tab) => (tab.status = "inactive"));
-    updatedHeaderTabs[idx].status = "active";
+    updatedHeaderTabs.forEach((tab) => (tab.status = 'inactive'));
+    updatedHeaderTabs[idx].status = 'active';
     let currentTab = updatedHeaderTabs[idx];
     updatedHeaderTabs.splice(idx, 1);
     updatedHeaderTabs.unshift(currentTab);
@@ -85,7 +85,7 @@ class Header extends Component {
       selectedTab: currentTab.slug,
     });
     this.props.handleSelectedTabChange(currentTab.slug);
-    if (currentTab.slug === "logout") {
+    if (currentTab.slug === 'logout') {
       this.handleLogOutRequest();
     }
   };
@@ -95,24 +95,24 @@ class Header extends Component {
   render() {
     if (this.props.authUser) {
       return (
-        <div className="row mt-5 reverse-col-flex Header">
-          <div className="col-sm-8">
-            <div className="userProfile">
-              <div className="profileImg">
+        <div className='row mt-5 reverse-col-flex Header'>
+          <div className='col-sm-8'>
+            <div className='userProfile'>
+              <div className='profileImg'>
                 <img
                   src={this.props.authUser.information.avatar}
-                  className="img img-responsive"
+                  className='img img-responsive'
                 ></img>
               </div>
-              <div className="profileDesc">
+              <div className='profileDesc'>
                 <h3>{this.props.authUser.information.fullName}</h3>
-                <div className="form-group UserInfoEdit d-flex">
+                <div className='form-group UserInfoEdit d-flex'>
                   {this.state.isTaglineChange ? (
                     <>
                       <input
-                        type="text"
-                        name="tagline"
-                        className="form-control editInfoInput"
+                        type='text'
+                        name='tagline'
+                        className='form-control editInfoInput'
                         value={this.state.selectedUser.information.tagline}
                         onChange={this.handleUserInfoChange}
                         onBlur={this.updateUserInfo}
@@ -120,10 +120,10 @@ class Header extends Component {
                       />
                     </>
                   ) : (
-                    <p className="text-muted">
+                    <p className='text-muted'>
                       "{this.props.authUser.information.tagline}"
                       <i
-                        className="fa fa-edit ml-3 cursor-pointer"
+                        className='fa fa-edit ml-3 cursor-pointer'
                         onClick={() =>
                           this.setState({
                             isTaglineChange: !this.state.isTaglineChange,
@@ -136,13 +136,13 @@ class Header extends Component {
               </div>
             </div>
           </div>
-          <div className="col-sm-4">
-            <div className="headerDesc">
-              <ul className="list-group">
+          <div className='col-sm-4'>
+            <div className='headerDesc'>
+              <ul className='list-group'>
                 {this.state.headerTabs.map((tab, idx) => {
                   if (
-                    tab.slug === "accounts" &&
-                    this.props.authUser.information.systemRole === "member"
+                    tab.slug === 'accounts' &&
+                    this.props.authUser.information.systemRole === 'member'
                   ) {
                     return null;
                   } else {
@@ -150,7 +150,7 @@ class Header extends Component {
                       <li
                         key={idx}
                         className={`list-group-item ${tab.status} ${
-                          this.state.isHeaderToggleClicked ? "show" : "hide"
+                          this.state.isHeaderToggleClicked ? 'show' : 'hide'
                         }`}
                         onClick={() => this.handleTabChange(idx)}
                       >
@@ -160,21 +160,21 @@ class Header extends Component {
                   }
                 })}
               </ul>
-              <div className="headerToggle wrapper">
+              <div className='headerToggle wrapper'>
                 <input
-                  type="checkbox"
-                  id="headerMenuToggler"
-                  className="input-toggler"
+                  type='checkbox'
+                  id='headerMenuToggler'
+                  className='input-toggler'
                   checked={this.state.isHeaderToggleClicked}
                 />
                 <label
-                  htmlFor="headerMenuToggler"
-                  className="menu-toggler"
+                  htmlFor='headerMenuToggler'
+                  className='menu-toggler'
                   onClick={this.toggleHeaderOptions}
                 >
-                  <span className="menu-toggler__line"></span>
-                  <span className="menu-toggler__line"></span>
-                  <span className="menu-toggler__line"></span>
+                  <span className='menu-toggler__line'></span>
+                  <span className='menu-toggler__line'></span>
+                  <span className='menu-toggler__line'></span>
                 </label>
               </div>
             </div>
