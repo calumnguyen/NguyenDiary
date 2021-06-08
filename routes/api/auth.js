@@ -11,8 +11,11 @@ const magic = new Magic(process.env.magic_api_key_secret);
 // @desc    Verify token and get User
 // @access  Private
 router.get("/", auth, async (req, res) => {
-  try {    
-    const user = await User.findOne({ "information.email": req.email },{information:1});
+  try {
+    const user = await User.findOne(
+      { "information.email": req.email },
+      { information: 1 }
+    );
     res.json(user);
   } catch (err) {
     console.log(err);
@@ -39,13 +42,15 @@ router.post("/", async (req, res) => {
       const token = jwt.sign(
         {
           ...user,
-          exp: Math.floor(Date.now() / 1000) + 60 * 50,
           sub: "csdsr3er4ew",
           nonce:
             Math.random().toString(36).substring(2, 15) +
             Math.random().toString(36).substring(2, 15),
         },
-        process.env.jwtSecret
+        process.env.jwtSecret,
+        {
+          expiresIn: "7d", // expires in 7 days
+        }
       );
 
       res.status(200).json({ token });
