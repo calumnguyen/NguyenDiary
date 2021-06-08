@@ -1,21 +1,21 @@
-import React, { PureComponent } from "react";
-import "./Home.scss";
-import ProfileCard from "./ProfileCard";
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { Redirect } from "react-router-dom";
-import Alert from "../../layout/Alert";
-import MyLoader from "../../layout/MyLoader";
+import React, { PureComponent } from 'react';
+import './Home.scss';
+import ProfileCard from './ProfileCard';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import Alert from '../../layout/Alert';
+import MyLoader from '../../layout/MyLoader';
 
 // import { confirmAlert } from 'react-confirm-alert';
 // import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import { OCAlertsProvider } from "@opuscapita/react-alerts";
-import { OCAlert } from "@opuscapita/react-alerts";
+import { OCAlertsProvider } from '@opuscapita/react-alerts';
+import { OCAlert } from '@opuscapita/react-alerts';
 
 // Actions
-import { getAllUsers } from "../../../actions/user";
-import { login, loadUser } from "../../../actions/auth";
+import { getAllUsers } from '../../../actions/user';
+import { login, loadUser } from '../../../actions/auth';
 
 export class Home extends PureComponent {
   constructor(props) {
@@ -30,9 +30,9 @@ export class Home extends PureComponent {
   handleSignInRequest = async (values) => {
     await this.props.login(values);
     if (this.props.isAuthenticated) {
-      this.props.history.push("/dashboard");
+      this.props.history.push('/dashboard');
     } else {
-      OCAlert.alertWarning("Could not log you in :(", {
+      OCAlert.alertWarning('Không thể đăng nhập bạn vào hệ thống!', {
         timeOut: 3000,
       });
     }
@@ -65,14 +65,17 @@ export class Home extends PureComponent {
       <>
         <MyLoader />
         <OCAlertsProvider />
-        {this.props.isAuthenticated && <Redirect to="/dashboard" />}
-        <section className="home">
-          <div className="container-fluid">
-            <div className="introDesc">
-              <h3>Log In</h3>
-              <p>Choose your profile, and we will send you an email to login</p>
+        {this.props.isAuthenticated && <Redirect to='/dashboard' />}
+        <section className='home'>
+          <div className='container-fluid'>
+            <div className='introDesc'>
+              <h3>Đăng Nhập Không Mật Khẩu</h3>
+              <p>
+                Chọn tài khoản của bạn. Chúng tôi sẽ gửi bạn một email để đăng
+                nhập.
+              </p>
             </div>
-            <div className="d-flex profiles">{this.allProfiles()}</div>
+            <div className='d-flex profiles'>{this.allProfiles()}</div>
           </div>
         </section>
       </>
