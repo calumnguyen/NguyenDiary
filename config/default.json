@@ -1,12 +1,12 @@
 {
-  "mongoProdURI": "mongodb+srv://admin-calum:QPE9xzsiYfExnWy4@drops.aqp0q.mongodb.net/NguyenDiary?retryWrites=true&w=majority",
-  "mongoLocalURI": "mongodb://localhost:27017/nguyenDiary",
-  "jwtSecret": "ngDIARYk**dsn()*889dad",
-  "cloud_name": "hhocaxlho",
-  "api_key": "814331141937647",
-  "api_secret": "jQdVuYthh_kKubpNe_d3BEvNCXY",
-  "sendgrid_api":"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",
-  "email_sender":"supervisor@sutygon.com",
-  "magic_api_key_publish":"pk_test_DCB03691FD035542",
-  "magic_api_key_secret":"sk_test_8883696544D5D0B7"
+  "mongoProdURI": "",
+  "mongoLocalURI": "",
+  "jwtSecret": "",
+  "cloud_name": "",
+  "api_key": "",
+  "api_secret": "",
+  "sendgrid_api":"",
+  "email_sender":"",
+  "magic_api_key_publish":"",
+  "magic_api_key_secret":""
 }
